@@ -136,10 +136,12 @@ assign [class="Google-chrome"] $ws2
 assign [class="Code"] $ws3
 assign [class="jetbrains-(?i)"] $ws3
 assign [class="TelegramDesktop"] $ws10
+assign [class="VK"] $ws10
 
 # binding mode for applications
 for_window [class="TelegramDesktop"] floating enable
 for_window [class="Pomolectron"] floating enable
+for_window [class="VK"] floating enable
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -205,3 +207,18 @@ bindsym Print exec scrot -e 'mv $f ~/Pictures/'
 # scratchpad
 bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
+
+# borders
+new_window pixel 1
+hide_edge_borders none
+
+bindsym $mod+u border none
+bindsym $mod+y border pixel 1
+bindsym $mod+n border normal
+
+# i3-gaps
+gaps inner 14
+gaps outer -2
+
+smart_gaps on
+smart_borders on
