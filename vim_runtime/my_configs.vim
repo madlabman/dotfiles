@@ -1,8 +1,8 @@
-" @chtotonetak
-
-set nowrap
-" Enable hidden symbols
-set listchars=tab:→\ ,space:·,nbsp:␣,trail:•,eol:¬,precedes:«,extends:»
-set list
 colorscheme gruvbox
-let vim_markdown_folding_disabled = 1
+set listchars=tab:→\ ,space:·,nbsp:␣,trail:•,eol:¶,precedes:«,extends:»
+set number
+au FileType tex set tw=0
+au FileType tex let g:tex_flavor = 'latex'
+set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
+let g:languagetool_jar='/usr/share/java/languagetool/languagetool-commandline.jar'
+let g:languagetool_lang='ru'
