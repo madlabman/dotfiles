@@ -36,11 +36,11 @@ bindsym $mod+Return exec xfce4-terminal
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec rofi -show drun -theme material
+bindsym $mod+d exec rofi -show drun -theme material -show-icons
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
-bindsym $mod+z exec --no-startup-id i3-dmenu-desktop
+bindsym $mod+z exec --no-startup-id dmenu_run
 
 # change focus
 bindsym $mod+j focus left
@@ -100,7 +100,7 @@ set $ws2 "web"
 set $ws3 "code"
 set $ws4 "office"
 set $ws5 "media"
-set $ws6 "[6]"
+set $ws6 "email"
 set $ws7 "[7]"
 set $ws8 "[8]"
 set $ws9 "[9]"
@@ -142,6 +142,7 @@ assign [class="VK"] $ws10
 for_window [class="TelegramDesktop"] floating enable
 for_window [class="Pomolectron"] floating enable
 for_window [class="VK"] floating enable
+for_window [class="Transmission-gtk"] floating enable
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -181,10 +182,12 @@ bindsym $mod+r mode "resize"
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always --no-startup-id nm-applet
 exec_always --no-startup-id blueman-applet
-exec_always --no-startup-id xfce4-power-manager
+#exec_always --no-startup-id xfce4-power-manager
+exec_always --no-startup-id mate-power-manager
 exec_always --no-startup-id xfce4-clipman
 exec --no-startup-id nitrogen --restore; sleep 1; compton
-exec --no-startup-id redshift-gtk
+exec --no-startup-id /usr/lib/xfce4/notifyd/xfce4-notifyd
+exec --no-startup-id xautolock -time 10 -locker ~/.config/i3/lock.sh
 
 # keyboard
 exec_always --no-startup-id setxkbmap -layout us,ru -option grp:win_space_toggle -model asus_laptop
@@ -193,6 +196,7 @@ exec_always --no-startup-id setxkbmap -layout us,ru -option grp:win_space_toggle
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+bindsym $mod+XF86AudioMute exec --no-startup-id pactl set-sink-volume 0 100% # max sound
 
 # screen brightness controls
 bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 10 # increase screen brightness
@@ -202,14 +206,14 @@ bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 10 # decrease
 bindsym $mod+shift+x exec ~/.config/i3/lock.sh ~/Pictures/lock-icon.png
 
 # screenshot
-bindsym Print exec scrot -e 'mv $f ~/Pictures/'
+bindsym Print exec i3-scrot
 
 # scratchpad
 bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
 
 # borders
-new_window pixel 1
+new_window none
 hide_edge_borders none
 
 bindsym $mod+u border none
@@ -220,5 +224,5 @@ bindsym $mod+n border normal
 gaps inner 14
 gaps outer -2
 
-smart_gaps on
+#smart_gaps on
 smart_borders on
