@@ -3,7 +3,7 @@ accent = #fba922
 
 [bar/top]
 enable-ipc = true
-monitor = eDP-1
+monitor = ${env:MONITOR:}
 width = 100%
 height = 27
 
@@ -25,7 +25,7 @@ module-margin-right = 3
 
 modules-left = 
 modules-center = xwindow
-modules-right = currency battery powermenu
+modules-right = battery powermenu
 
 tray-position = left
 
@@ -82,7 +82,7 @@ menu-2-1-foreground = ${colors.accent}
 menu-2-1-exec = menu-open-0
 
 [bar/bottom]
-monitor = eDP-1
+monitor = ${env:MONITOR:}
 bottom = true
 width = 100%
 height = 27
@@ -134,7 +134,7 @@ blacklist-1 = scroll loc
 
 [module/fs-root]
 type = internal/fs
-mount-0 = /
+mount-0 = /home
 interval = 30
 label-mounted = %{F#00ee53}%free%%{F-} / %total%
 
@@ -188,6 +188,7 @@ ws-icon-2 = code;
 ws-icon-3 = office;
 ws-icon-4 = media;
 ws-icon-5 = chat;
+ws-icon-6 = email;
 ws-icon-default = 
 
 label-dimmed-underline = ${root.background}
