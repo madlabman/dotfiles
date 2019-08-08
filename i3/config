@@ -93,6 +93,9 @@ bindsym $mod+a focus parent
 # focus the child container
 #bindsym $mod+d focus child
 
+# move workspace to another screen
+bindsym $mod+m move workspace to output right
+
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
 set $ws1 "term"
@@ -185,6 +188,7 @@ exec_always --no-startup-id blueman-applet
 #exec_always --no-startup-id xfce4-power-manager
 exec_always --no-startup-id mate-power-manager
 exec_always --no-startup-id xfce4-clipman
+exec --no-startup-id fluxgui
 exec --no-startup-id nitrogen --restore; sleep 1; compton
 exec --no-startup-id /usr/lib/xfce4/notifyd/xfce4-notifyd
 exec --no-startup-id xautolock -time 10 -locker ~/.config/i3/lock.sh
