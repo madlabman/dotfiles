@@ -5,7 +5,7 @@ accent = #fba922
 enable-ipc = true
 monitor = ${env:MONITOR:}
 width = 100%
-height = 27
+height = 23
 
 background = #1f1f1f
 foreground = #eee
@@ -53,8 +53,9 @@ format-padding = 3
 format-foreground = #fff
 
 label-open = 
+label-open-font = 4
 label-close = 
-label-close-font = 1
+label-close-font = 3
 label-separator = " - "
 
 menu-0-0 = Hibernate
@@ -85,17 +86,17 @@ menu-2-1-exec = menu-open-0
 monitor = ${env:MONITOR:}
 bottom = true
 width = 100%
-height = 27
+height = 23
 
 background = #1c1c1c
 foreground = #eefafafa
 
-overline-size = 3
+overline-size = 2
 overline-color = ${colors.accent}
-underline-size = 3
+underline-size = 2
 underline-color = ${colors.accent}
 
-border-top = 3
+border-top = 2
 border-top-color = #3d3d3d
 
 spacing = 3
@@ -108,10 +109,10 @@ modules-left = i3
 ;modules-center =
 modules-right = xbacklight pulseaudio temperature cpu memory fs-root keyboard clock
 
-font-0 = Ubuntu:pixelsize=10
-font-1 = xos4 Terminus:size=5;0
-font-2 = Font Awesome 5 Free Solid:size=10;0
-font-3 = Font Awesome 5 Brands:size=10;0
+font-0 = Font Awesome 5 Brands:size=10;0
+font-1 = Font Awesome 5 Free Solid:size=10;0
+font-2 = Ubuntu:pixelsize=10
+font-3 = xos4 Terminus:size=6;0
 
 [module/pulseaudio]
 type = internal/pulseaudio
@@ -134,13 +135,13 @@ blacklist-1 = scroll loc
 
 [module/fs-root]
 type = internal/fs
-mount-0 = /home
+mount-0 = /
 interval = 30
 label-mounted = %{F#00ee53}%free%%{F-} / %total%
 
 [module/temperature]
 type = internal/temperature
-thermal-zone = 0
+thermal-zone = 2
 
 [module/xbacklight]
 type = internal/xbacklight
@@ -263,19 +264,19 @@ label = RAM
 label-font = 1
 label-foreground = #99
 
-bar-used-width = 30
+bar-used-width = 20
 bar-used-gradient = true
 bar-used-foreground-0 = #449f3d
 bar-used-foreground-1 = #2f8419
 bar-used-foreground-2 = #f5a70a
 bar-used-foreground-3 = #ed5456
 bar-used-indicator = █
-bar-used-indicator-font = 2
+bar-used-indicator-font = 4
 bar-used-indicator-foreground = #fff
 bar-used-fill = █
-bar-used-fill-font = 2
+bar-used-fill-font = 4
 bar-used-empty = █
-bar-used-empty-font = 2
+bar-used-empty-font = 4
 bar-used-empty-foreground = #44
 
 [module/wireless-network]
