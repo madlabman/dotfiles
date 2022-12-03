@@ -13,7 +13,7 @@ set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:Noto Sans Display 10
+font pango:Cantarell 10
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -26,22 +26,32 @@ font pango:Noto Sans Display 10
 # X core fonts rendering does not support right-to-left and this being a bitmap
 # font, it doesn’t scale on retina/hidpi displays.
 
+# Colors @see https://i3wm.org/docs/userguide.html#_changing_colors
+# default from https://github.com/i3/i3/blob/117fb13177824f008c86b827864fa6ebeeccb548/src/config.c#L196-L199
+# <colorclass> <border> <background> <text> <indicator> <child_border>
+client.unfocused #222222 #383838 #888888 #292d2e
+client.focused #007d70 #007d70 #ffffff #2e9ef4
+client.urgent #7d000d #7d000d #ffffff #900000
+
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec alacritty
+bindsym $mod+Return exec --no-startup-id alacritty
 
 # kill focused window
 bindsym $mod+Shift+q kill
 
+# switch to the urgent window
+bindsym $mod+x [urgent=latest] focus
+
 # start dmenu (a program launcher)
-bindsym $mod+d exec rofi -show drun -theme material -show-icons
-bindsym $mod+Shift+Tab exec rofi -show window -theme material -show-icons
+bindsym $mod+d exec --no-startup-id rofi -show drun -theme material -icon-theme "Papirus" -show-icons -dpi 144
+bindsym $mod+Shift+Tab exec --no-startup-id rofi -show window -theme material -icon-theme "Papirus" -show-icons -dpi 144
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
-bindsym $mod+z exec --no-startup-id dmenu_run
+bindsym $mod+z exec --no-startup-id rofi -show emoji -theme material -modi emoji -dpi 144
 
 # change focus
 bindsym $mod+j focus left
@@ -146,13 +156,15 @@ assign [class="slack"] $ws10
 assign [title="data:, - Chromium"] $ws7
 
 # binding mode for applications
-for_window [class="TelegramDesktop"] floating enable
+# for_window [class="TelegramDesktop"] floating enable
 for_window [class="VK"] floating enable
 for_window [class="Transmission-gtk"] floating enable
 for_window [class="OpenRGB"] floating enable
 for_window [class="Skype"] floating enable
 
 for_window [title="data:, - Chromium"] floating enable
+for_window [window_role="pop-up"] floating enable
+for_window [title="DevTools - Node.js"] floating disable
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -190,37 +202,37 @@ bindsym $mod+r mode "resize"
 
 # autostart
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-#exec_always --no-startup-id nm-applet
-#exec_always --no-startup-id blueman-applet
-#exec_always --no-startup-id xfce4-power-manager
-exec_always --no-startup-id mate-power-manager
-#exec_always --no-startup-id xfce4-clipman
-#exec --no-startup-id fluxgui
+exec --no-startup-id redshift -l 52.1348:21.0040
 exec --no-startup-id nitrogen --restore; sleep 1; picom -b
 exec --no-startup-id /usr/lib/xfce4/notifyd/xfce4-notifyd
-exec --no-startup-id /usr/lib/xfce-polkit/xfce-polkit
-#exec --no-startup-id xautolock -time 10 -locker ~/.config/i3/lock.sh
-exec dex -ae i3
-
-# keyboard
-exec_always --no-startup-id setxkbmap -layout us,ru -option grp:win_space_toggle
+exec --no-startup-id /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
+exec --no-startup-id xautolock -time 10 -locker betterlockscreen -l dim
+exec --no-startup-id flameshot
+exec --no-startup-id minidlnad -f $HOME/.config/minidlna/minidlna.conf -P $HOME/.cache/minidlna/minidlna.pid
+exec --no-startup-id dex -ae i3
 
 # pulse audio controls
 bindsym XF86AudioRaiseVolume exec --no-startup-id ~/.config/i3/volume.sh up #increase sound volume
 bindsym XF86AudioLowerVolume exec --no-startup-id ~/.config/i3/volume.sh down #decrease sound volume
 bindsym XF86AudioMute exec --no-startup-id ~/.config/i3/volume.sh toggle # mute sound
-# bindsym XF86AudioMute exec --no-startup-id ~/.config/i3/volume.sh max # max sound
 
 # screen brightness controls
-bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 10 # increase screen brightness
-bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 10 # decrease screen brightness
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +10% # increase screen brightness
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 10%- # decrease screen brightness
 
 # lock
-bindsym $mod+shift+x exec ~/.config/i3/lock.sh ~/Pictures/lock-icon.png
+bindsym $mod+shift+x exec --no-startup-id betterlockscreen -l dim
+
+# sleep
+bindsym $mod+shift+s exec --no-startup-id systemctl suspend
+
+# perf mode
+bindsym XF86Launch4 exec --no-startup-id polybar-ippm next
 
 # screenshot
-bindsym Print exec i3-scrot
-bindsym $mod+Shift+w exec i3-scrot -w
+bindsym Print exec --no-startup-id i3-scrot
+bindsym $mod+Shift+w exec --no-startup-id i3-scrot -w
+bindsym Shift+Print exec --no-startup-id flameshot gui
 
 # scratchpad
 bindsym $mod+Shift+minus move scratchpad
@@ -237,22 +249,15 @@ bindsym $mod+u border none
 bindsym $mod+y border pixel 1
 bindsym $mod+n border normal
 
-# i3-gaps
-gaps inner 14
-gaps outer -2
-
-smart_gaps on
-smart_borders on
-
 # Manual management of external displays
 # Set the shortcuts and what they do
-set $mode_display [l]aptop [h]dmi [b]oth
+set $mode_display [l]aptop [h]dmi [d]p
 bindsym $mod+o mode "$mode_display"
 
 mode "$mode_display" {
-	bindsym	l exec --no-startup-id xrandr --output eDP-1 --primary --mode 1920x1080 --output HDMI-1 --off --output DP-1 --off --output HDMI-2 --off && nitrogen --restore && ~/.config/polybar/launch.sh && xdotool key Escape
-	bindsym	h exec --no-startup-id xrandr --output eDP-1 --off --output HDMI-1 --primary --mode 2560x1440 --output DP-1 --off --output HDMI-2 --off && nitrogen --restore && ~/.config/polybar/launch.sh && xdotool key Escape
-	bindsym b exec --no-startup-id xrandr --output eDP-1 --mode 1920x1080 --pos 0x0 --rotate normal --output HDMI-1 --primary --mode 2560x1440 --pos 1920x0 --rotate normal --output DP-1 --off --output HDMI-2 --off && nitrogen --restore && ~/.config/polybar/launch.sh && xdotool key Escape
+	bindsym	l exec --no-startup-id xrandr --output eDP --primary --mode 2240x1400 \
+                   --output HDMI-A-0 --off --output DisplayPort-0 --off --output DisplayPort-1 --off \
+                   && nitrogen --restore && ~/.config/polybar/launch.sh && xdotool key Escape
 
 	# back to normal: Enter or Escape
 	bindsym Return mode "default"

@@ -1,3 +1,7 @@
+" Improve statup time
+let g:loaded_netrwPlugin = 1
+let g:loaded_netrw = 1
+
 " Section for configuration required before plugins load
 let g:ale_disable_lsp = 1
 
@@ -18,38 +22,63 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'mhinz/vim-startify'
 Plugin 'mhinz/vim-signify'
-" Plugin 'airblade/vim-gitgutter'
-Plugin 'vim-airline/vim-airline'
-Plugin 'preservim/nerdtree'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'itchyny/lightline.vim'
+Plugin 'maximbaz/lightline-ale'
+" Plugin 'preservim/nerdtree'
+" Plugin 'Xuyuanp/nerdtree-git-plugin'
+" Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
+" Plugin 'ryanoasis/vim-devicons'
+" Plugin 'PhilRunninger/nerdtree-visual-selection'
 " Plugin 'vim-scripts/bufexplorer.zip'
+Plugin 'nvim-tree/nvim-web-devicons' " optional, for file icons
+Plugin 'nvim-tree/nvim-tree.lua'
 Plugin 'junegunn/goyo.vim'
 Plugin 'junegunn/limelight.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-commentary'
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
-Plugin 'neoclide/coc.nvim'
-" Plugin 'ycm-core/YouCompleteMe'
+if has('nvim')
+    Plugin 'neovim/nvim-lspconfig'
+    Plugin 'hrsh7th/cmp-nvim-lsp'
+    Plugin 'hrsh7th/cmp-nvim-lsp-signature-help'
+    Plugin 'hrsh7th/cmp-buffer'
+    Plugin 'hrsh7th/nvim-cmp'
+else
+    Plugin 'neoclide/coc.nvim'
+endif
 Plugin 'dense-analysis/ale'
 Plugin 'preservim/tagbar'
-Plugin 'ludovicchabant/vim-gutentags'
-Plugin 'tpope/vim-dispatch'
-Plugin 'vim-test/vim-test'
+Plugin 'direnv/direnv.vim'
+" Plugin 'dbeniamine/cheat.sh-vim'
+Plugin 'ruanyl/vim-gh-line'
 
 " Colorschemes
-Plugin 'morhetz/gruvbox'
+Plugin 'sainnhe/sonokai'
+Plugin 'sainnhe/everforest'
+
+if has('nvim')
+    Plugin 'ellisonleao/gruvbox.nvim'
+else
+    Plugin 'morhetz/gruvbox'
+endif
 
 " Language specific
 Plugin 'pearofducks/ansible-vim'
 Plugin 'Vimjas/vim-python-pep8-indent'
+" Plugin 'vyperlang/vim-vyper'
 
 if has('nvim')
     Plugin 'nvim-treesitter/nvim-treesitter'
+    Plugin 'nvim-treesitter/playground'
+    Plugin 'p00f/nvim-ts-rainbow'
 endif
 
 call vundle#end()            " required
 filetype plugin indent on    " required
+
+" autocmd FileType python setlocal shiftwidth=2 softtabstop=2 expandtab
+autocmd FileType javascript,typescript setlocal shiftwidth=2 softtabstop=2 expandtab
 
 " General
 " =======
@@ -67,7 +96,7 @@ nmap <leader>w :w!<cr>
 
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
-command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
+command! W execute 'w !doas tee % > /dev/null' <bar> edit!
 
 " Interface
 " =========
@@ -76,14 +105,40 @@ set gfn=Iosevka\ 11
 
 set background=dark
 
+set title
+if has('title')
+    if has('nvim')
+        set titlestring=nvim
+    else
+        set titlestring=vim
+    endif
+    " set titlestring+=%f 	" filename
+    " set titlestring+=%h%m%r%w 	" Flag
+    " set titlestring+=\ -\ %{v:progname}
+    set titlestring+=\ %{substitute(getcwd(),\ $HOME,\ '~',\ '')}
+endif
+
 let g:gruvbox_transparent_bg = 0
 let g:gruvbox_bold = 1
 let g:gruvbox_italic = 0
+let g:gruvbox_italicize_comments = 0
 let g:gruvbox_contrast_dark = "hard"
-let g:gruvbox_contrast_light = "hard"
+let g:gruvbox_contrast_light = "soft"
 let g:gruvbox_sign_column = "bg0"
 
-autocmd vimenter * ++nested colorscheme gruvbox
+let g:sonokai_style = "shusia"
+let g:sonokai_better_performance = 0
+let g:sonokai_enable_italic = 0
+let g:sonokai_disable_italic_comment = 1
+
+let g:everforest_background = "hard"
+let g:everforest_better_performance = 0
+let g:everforest_disable_italic_comment = 1
+let g:everforest_diagnostic_text_highlight = 0
+let g:everforest_diagnostic_line_highlight = 0
+
+autocmd vimenter * ++nested colorscheme everforest
+
 " Transparent background
 " autocmd vimenter * ++nested hi Normal guibg=NONE ctermbg=NONE
 " https://github.com/preservim/nerdtree/issues/928
@@ -97,6 +152,9 @@ if has('win16') || has('win32')
 else
     set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 endif
+
+
+" set conceallevel=3
 
 " Height of the command bar
 set cmdheight=1
@@ -153,10 +211,21 @@ set laststatus=2
 set cursorline
 
 " Set cursor to block in INSERT mode
-:set guicursor=i:block
+" :set guicursor=i:block
+
+" Folding
+" TODO remove since doesn't use it, actually
+" if has('nvim')
+"     set foldmethod=expr
+"     set foldexpr=nvim_treesitter#foldexpr()
+"     autocmd BufReadPost,FileReadPost * normal zR
+" endif
 
 " Misc
 " ====
+
+" Turn off modeline for the selected filetypes
+autocmd Syntax python setlocal nomodeline
 
 " Turn backup off, since most stuff is in SVN, git etc. anyway...
 set nobackup
@@ -167,8 +236,8 @@ set noswapfile
 set updatetime=300
 
 " Spell check error highlight (affect sytax highlight also)
-let &t_Cs = '\e[4:3m'
-let &t_Ce = '\e[4:0m'
+" let &t_Cs = '\e[4:3m'
+" let &t_Ce = '\e[4:0m'
 
 hi SpellBad   guisp=red    gui=undercurl guifg=NONE guibg=NONE ctermfg=NONE ctermbg=NONE term=underline cterm=underline
 hi SpellCap   guisp=yellow gui=undercurl guifg=NONE guibg=NONE ctermfg=NONE ctermbg=NONE term=underline cterm=underline
@@ -225,6 +294,22 @@ set tw=140
 set ai "Auto indent
 set si "Smart indent
 set wrap "Wrap lines
+
+let g:load_black = 0
+
+let g:loaded_logiPat           = 1
+let g:loaded_rrhelper          = 1
+let g:loaded_tarPlugin         = 1
+" let g:loaded_man               = 1
+let g:loaded_gzip              = 1
+let g:loaded_zipPlugin         = 1
+let g:loaded_2html_plugin      = 1
+let g:loaded_shada_plugin      = 1
+let g:loaded_spellfile_plugin  = 1
+let g:loaded_netrw             = 1
+let g:loaded_netrwPlugin       = 1
+let g:loaded_tutor_mode_plugin = 1
+let g:loaded_remote_plugins    = 1
 
 " Windows / Tabs / Buffers
 " ========================
@@ -295,81 +380,17 @@ endfunction
 let python_highlight_all = 1
 au FileType python syn keyword pythonDecorator True None False self
 
+au BufNewFile,BufRead *.vy set ft=vyper
 au BufNewFile,BufRead *.jinja set syntax=htmljinja
 au BufNewFile,BufRead *.mako set ft=mako
-au BufNewFile,BufRead *.yaml.j2 set syntax=ansible
-autocmd BufRead *.twig set syntax=html filetype=html
+au BufRead *.twig set syntax=html filetype=html
+au BufNewFile,BufRead *.y*ml.j2 set filetype=yaml.ansible
 
 " Parenthisis, brackets
 " =====================
 
 vnoremap $1 <esc>`>a)<esc>`<i(<esc>
 vnoremap $2 <esc>`>a]<esc>`<i[<esc>
-vnoremap $3 <esc>`>a}<esc>`<i{<esc>
-vnoremap $$ <esc>`>a"<esc>`<i"<esc>
-vnoremap $q <esc>`>a'<esc>`<i'<esc>
-vnoremap $e <esc>`>a`<esc>`<i`<esc>
-
-" Plugins
-" =======
-
-" ALE
-" ===
-
-" Show linter name
-let g:ale_echo_msg_format = '[%linter%] %s'
-let g:ale_open_list = 0
-" Set this if you want to.
-" This can be useful if you are combining ALE with
-" some other plugin which sets quickfix errors, etc.
-let g:ale_keep_list_window_open = 0
-let g:ale_linters = {
-\   'python': ['pylint', 'flake8', 'mypy'],
-\}
-" Configure linters
-let g:ale_python_mypy_options = "--ignore-missing-imports"
-
-
-" Bufexplorer
-" ===========
-
-let g:bufExplorerDefaultHelp = 0
-let g:bufExplorerShowRelativePath = 1
-let g:bufExplorerFindActive = 1
-let g:bufExplorerSortBy = 'name'
-map <leader>o :Buffers<cr>
-
-" NERDTree
-" ========
-let g:NERDTreeWinPos = "left"
-let NERDTreeShowHidden = 0
-let NERDTreeIgnore = ['\.pyc$', '__pycache__']
-let g:NERDTreeWinSize = 42
-map <leader>nn :NERDTreeToggle<cr>
-map <leader>nb :NERDTreeFromBookmark<Space>
-map <leader>nf :NERDTreeFocus<cr>
-
-" Limelight
-" =========
-
-let g:limelight_conceal_ctermfg = 'DarkGray'
-
-" Goyo
-" ====
-
-let g:goyo_width = 140
-let g:goyo_margin_top = 2
-let g:goyo_margin_bottom = 2
-nnoremap <silent> <leader>z :Goyo<cr>
-autocmd! User GoyoEnter Limelight
-autocmd! User GoyoLeave Limelight!
-
-" YouCompleteMe
-" =============
-
-" let g:ycm_autoclose_preview_window_after_insertion = 1
-" :nnoremap K :YcmCompleter GetDoc<CR>
-" :nnoremap <c-]> :YcmCompleter GoTo<CR>
 
 " Airline
 " =======
@@ -382,7 +403,48 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#scrollbar#enabled = 0
 " Force usage Powerline fonts
 let g:airline_powerline_fonts = 1
+" Use edge theme
+" let g:airline_theme = 'gruvbox'
 
+" Lightline
+" =========
+
+" Configure lightline
+let g:lightline = {
+      \ 'colorscheme': 'everforest',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'relativepath', 'modified', 'cocstatus' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead',
+      \   'cocstatus': 'coc#status'
+      \ },
+      \ }
+let g:lightline.component_expand = {
+      \  'linter_checking': 'lightline#ale#checking',
+      \  'linter_infos': 'lightline#ale#infos',
+      \  'linter_warnings': 'lightline#ale#warnings',
+      \  'linter_errors': 'lightline#ale#errors',
+      \  'linter_ok': 'lightline#ale#ok',
+      \ }
+let g:lightline.component_type = {
+      \     'linter_checking': 'right',
+      \     'linter_infos': 'right',
+      \     'linter_warnings': 'warning',
+      \     'linter_errors': 'error',
+      \     'linter_ok': 'right',
+      \ }
+let g:lightline.active.right =  [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ],
+        \            [ 'lineinfo' ],
+	    \            [ 'percent' ],
+	    \            [ 'fileformat', 'fileencoding', 'filetype'] ]
+
+let g:lightline#ale#indicator_checking = "\uf110 "
+let g:lightline#ale#indicator_infos = "\uf129"
+let g:lightline#ale#indicator_warnings = "\uf071"
+let g:lightline#ale#indicator_errors = "\uf05e "
+let g:lightline#ale#indicator_ok = "\uf00c "
 
 " FZF
 " ===
@@ -425,66 +487,72 @@ endif
 " coc.nvim
 " ========
 
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+if !has('nvim')
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+    " Use tab for trigger completion with characters ahead and navigate.
+    " NOTE: There's always complete item selected by default, you may want to enable
+    " no select by `"suggest.noselect": true` in your configuration file.
+    " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+    " other plugin before putting this into your config.
+    inoremap <silent><expr> <TAB>
+          \ coc#pum#visible() ? coc#pum#next(1) :
+          \ CheckBackspace() ? "\<Tab>" :
+          \ coc#refresh()
+    inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-" Make <CR> auto-select the first completion item and notify coc.nvim to
-" format on enter, <cr> could be remapped by other vim plugin
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+    " Make <CR> to accept selected completion item or notify coc.nvim to format
+    " <C-g>u breaks current undo, please make your own choice.
+    inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                                  \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
-" Use `[g` and `]g` to navigate diagnostics
-" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+    function! CheckBackspace() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1]  =~# '\s'
+    endfunction
 
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+    " Use `[g` and `]g` to navigate diagnostics
+    " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+    nmap <silent> [g <Plug>(coc-diagnostic-prev)
+    nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+    " GoTo code navigation.
+    nmap <silent> gd <Plug>(coc-definition)
+    nmap <silent> gy <Plug>(coc-type-definition)
+    nmap <silent> gi <Plug>(coc-implementation)
+    nmap <silent> gr <Plug>(coc-references)
+    nmap <silent> gf <Plug>(coc-codeaction-cursor)
 
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
-endfunction
+    nmap <leader>rn <Plug>(coc-rename)
 
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
+    " Use K to show documentation in preview window.
+    nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-" nerdtree-git
-" ============
+    function! s:show_documentation()
+      if (index(['vim','help'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+      elseif (coc#rpc#ready())
+        call CocActionAsync('doHover')
+      else
+        execute '!' . &keywordprg . " " . expand('<cword>')
+      endif
+    endfunction
 
-let g:NERDTreeGitStatusIndicatorMapCustom = {
-    \ 'Modified'  :'✹',
-    \ 'Staged'    :'✚',
-    \ 'Untracked' :'-',
-    \ 'Renamed'   :'~',
-    \ 'Unmerged'  :'═',
-    \ 'Deleted'   :'✖',
-    \ 'Dirty'     :'^',
-    \ 'Ignored'   :'% ',
-    \ 'Clean'     :'✔︎',
-    \ 'Unknown'   :'?',
-    \ }
+    " Highlight the symbol and its references when holding the cursor.
+    autocmd CursorHold * silent call CocActionAsync('highlight')
+
+    " Remap <C-j> and <C-k> for scroll float windows/popups.
+    if has('nvim-0.4.0') || has('patch-8.2.0750')
+      nnoremap <silent><nowait><expr> <C-j> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-w><C-j>"
+      nnoremap <silent><nowait><expr> <C-k> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-w><C-k>"
+      inoremap <silent><nowait><expr> <C-j> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+      inoremap <silent><nowait><expr> <C-k> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+      vnoremap <silent><nowait><expr> <C-j> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-w><C-j>"
+      vnoremap <silent><nowait><expr> <C-k> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-w><C-k>"
+    endif
+
+    " set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+endif
 
 " EasyMotion
 " ==========
@@ -499,11 +567,182 @@ let g:EasyMotion_smartcase = 1
 " ==========
 if has('nvim')
 lua <<EOF
+local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+parser_config.vyper = {
+  install_info = {
+    url = "~/projects/tree-sitter-vyper", -- local path or git repo
+    files = {
+        "src/parser.c",
+        "src/scanner.cc"
+    },
+    -- optional entries:
+    branch = "master", -- default branch in case of git repo if different from master
+    generate_requires_npm = false, -- if stand-alone parser without npm dependencies
+    requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
+  },
+  filetype = "vyper", -- if filetype does not match the parser name
+}
 require'nvim-treesitter.configs'.setup {
   highlight = {
     enable = true,              -- false will disable the whole extension
+    -- disable = { "yaml" },
     additional_vim_regex_highlighting = false,
   },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "gnn",
+      node_incremental = "grn",
+      scope_incremental = "grc",
+      node_decremental = "grm",
+    },
+  },
+  rainbow = {
+    enable = true,
+    -- disable = { "jsx", "cpp" }, list of languages you want to disable the plugin for
+    extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
+    max_file_lines = 1000, -- Do not enable for files with more than n lines, int
+    -- colors = {}, -- table of hex strings
+    -- termcolors = {} -- table of colour name strings
+  }
 }
+EOF
+endif
+
+" vim-signify
+" ===========
+
+nmap <leader>gu :SignifyHunkUndo<CR>
+
+" nvim-lspconfig
+" ==============
+
+if has('nvim')
+
+lua <<EOF
+
+-- Mappings.
+-- See `:help vim.diagnostic.*` for documentation on any of the below functions
+local opts = { noremap=true, silent=true }
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
+
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
+local on_attach = function(client, bufnr)
+  -- Enable completion triggered by <c-x><c-o>
+  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  -- Mappings.
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  local bufopts = { noremap=true, silent=true, buffer=bufnr }
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+  vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
+  vim.keymap.set('n', 'gn', vim.lsp.buf.rename, bufopts)
+  vim.keymap.set('n', 'gf', vim.lsp.buf.code_action, bufopts)
+  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+  vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+end
+
+-- Set up nvim-cmp.
+local cmp = require'cmp'
+
+local has_words_before = function()
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match('%s') == nil
+end
+
+local kind_icons = {
+  Text = "",
+  Method = "",
+  Function = "",
+  Constructor = "",
+  Field = "",
+  Variable = "",
+  Class = "ﴯ",
+  Interface = "",
+  Module = "",
+  Property = "ﰠ",
+  Unit = "",
+  Value = "",
+  Enum = "",
+  Keyword = "",
+  Snippet = "",
+  Color = "",
+  File = "",
+  Reference = "",
+  Folder = "",
+  EnumMember = "",
+  Constant = "",
+  Struct = "",
+  Event = "",
+  Operator = "",
+  TypeParameter = ""
+}
+
+cmp.setup({
+  window = {
+    -- completion = cmp.config.window.bordered(),
+    -- documentation = cmp.config.window.bordered(),
+  },
+  formatting = {
+    format = function(entry, vim_item)
+      -- Kind icons
+      vim_item.kind = string.format('%s', kind_icons[vim_item.kind]) -- Keep icon only
+      --
+      return vim_item
+    end
+  },
+  mapping = cmp.mapping.preset.insert({
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.abort(),
+    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    ['<Tab>'] = function(fallback)
+      if not cmp.select_next_item() then
+        if vim.bo.buftype ~= 'prompt' and has_words_before() then
+          cmp.complete()
+        else
+          fallback()
+        end
+      end
+    end,
+    ['<S-Tab>'] = function(fallback)
+      if not cmp.select_prev_item() then
+        if vim.bo.buftype ~= 'prompt' and has_words_before() then
+          cmp.complete()
+        else
+          fallback()
+        end
+      end
+    end,
+  }),
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    { name = 'nvim_lsp_signature_help' },
+  }, {
+    { name = 'buffer' },
+  })
+})
+
+-- Set up lspconfig.
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+
+require('lspconfig')['pyright'].setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+}
+require('lspconfig')['tsserver'].setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+}
+
 EOF
 endif

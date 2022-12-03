@@ -1,0 +1,14 @@
+[gcloud]
+disabled = true
+
+[[battery.display]]
+threshold = 10
+style = "bold red"
+
+[[battery.display]]
+threshold = 20
+style = "bold yellow"
+
+[git_status]
+untracked = ""
+stashed = "*"
