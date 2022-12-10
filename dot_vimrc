@@ -391,6 +391,47 @@ au BufNewFile,BufRead *.y*ml.j2 set filetype=yaml.ansible
 
 vnoremap $1 <esc>`>a)<esc>`<i(<esc>
 vnoremap $2 <esc>`>a]<esc>`<i[<esc>
+vnoremap $3 <esc>`>a}<esc>`<i{<esc>
+vnoremap $$ <esc>`>a"<esc>`<i"<esc>
+vnoremap $q <esc>`>a'<esc>`<i'<esc>
+vnoremap $e <esc>`>a`<esc>`<i`<esc>
+
+" Plugins
+" =======
+
+" ALE
+" ===
+
+" Show linter name
+let g:ale_echo_msg_format = '[%linter%] %s'
+let g:ale_open_list = 0
+" Set this if you want to.
+" This can be useful if you are combining ALE with
+" some other plugin which sets quickfix errors, etc.
+let g:ale_keep_list_window_open = 0
+let g:ale_linters = {
+\   'python': ['pylint', 'flake8', 'mypy'],
+\   'typescript': ['eslint', 'prettier'],
+\   'javascript': ['eslint', 'prettier'],
+\}
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+\   'javascript': ['prettier'],
+\   'typescript': ['prettier'],
+\}
+let g:ale_fix_on_save = 1
+" Configure linters
+let g:ale_python_mypy_options = "--ignore-missing-imports"
+
+
+" Bufexplorer
+" ===========
+
+let g:bufExplorerDefaultHelp = 0
+let g:bufExplorerShowRelativePath = 1
+let g:bufExplorerFindActive = 1
+let g:bufExplorerSortBy = 'name'
+map <leader>o :Buffers<cr>
 
 " Airline
 " =======
