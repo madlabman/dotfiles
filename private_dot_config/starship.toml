@@ -9,6 +9,9 @@ style = "bold red"
 threshold = 20
 style = "bold yellow"
 
+[python]
+format = 'via [${symbol}(${version}) ]($style)'
+
 [git_status]
 untracked = ""
 stashed = "*"
