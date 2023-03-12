@@ -30,7 +30,7 @@ font pango:Cantarell 10
 # default from https://github.com/i3/i3/blob/117fb13177824f008c86b827864fa6ebeeccb548/src/config.c#L196-L199
 # <colorclass> <border> <background> <text> <indicator> <child_border>
 client.unfocused #222222 #383838 #888888 #292d2e
-client.focused #007d70 #007d70 #ffffff #2e9ef4
+client.focused #4285f4 #4285f4 #ffffff #2e9ef4
 client.urgent #7d000d #7d000d #ffffff #900000
 
 # Use Mouse+$mod to drag floating windows to their wanted position
@@ -47,7 +47,7 @@ bindsym $mod+x [urgent=latest] focus
 
 # start dmenu (a program launcher)
 bindsym $mod+d exec --no-startup-id rofi -show drun -theme material -icon-theme "Papirus" -show-icons -dpi 144
-bindsym $mod+Shift+Tab exec --no-startup-id rofi -show window -theme material -icon-theme "Papirus" -show-icons -dpi 144
+bindsym $mod+Escape exec --no-startup-id rofi -show window -theme material -icon-theme "Papirus" -show-icons -dpi 144
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
@@ -165,6 +165,7 @@ for_window [class="Skype"] floating enable
 for_window [title="data:, - Chromium"] floating enable
 for_window [window_role="pop-up"] floating enable
 for_window [title="DevTools - Node.js"] floating disable
+for_window [class="frame"] floating disable
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -204,9 +205,9 @@ bindsym $mod+r mode "resize"
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec --no-startup-id redshift -l 52.1348:21.0040
 exec --no-startup-id nitrogen --restore; sleep 1; picom -b
-exec --no-startup-id /usr/lib/xfce4/notifyd/xfce4-notifyd
+# exec --no-startup-id /usr/lib/xfce4/notifyd/xfce4-notifyd
 exec --no-startup-id /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
-exec --no-startup-id xautolock -time 10 -locker betterlockscreen -l dim
+exec --no-startup-id xautolock -time 10 -locker betterlockscreen -l dimblur
 exec --no-startup-id flameshot
 exec --no-startup-id minidlnad -f $HOME/.config/minidlna/minidlna.conf -P $HOME/.cache/minidlna/minidlna.pid
 exec --no-startup-id dex -ae i3
@@ -221,7 +222,7 @@ bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +10% # increa
 bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 10%- # decrease screen brightness
 
 # lock
-bindsym $mod+shift+x exec --no-startup-id betterlockscreen -l dim
+bindsym $mod+shift+x exec --no-startup-id betterlockscreen -l dimblur
 
 # sleep
 bindsym $mod+shift+s exec --no-startup-id systemctl suspend
@@ -240,6 +241,10 @@ bindsym $mod+minus scratchpad show
 
 # switch between the current workspace and the previously focused one
 bindsym $mod+Tab workspace back_and_forth
+
+# dunst
+bindsym $mod+Shift+h exec --no-startup-id dunstctl history-pop
+bindsym $mod+Shift+a exec --no-startup-id dunstctl close-all
 
 # borders
 new_window none
