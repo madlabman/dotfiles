@@ -11,7 +11,12 @@ vim.g.coq_settings = {
 	},
 }
 
-local status_ok, coq = pcall(require, "coq")
+-- local status_ok, coq = pcall(require, "coq")
+-- if not status_ok then
+-- 	return
+-- end
+
+local status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
 if not status_ok then
 	return
 end
@@ -88,5 +93,9 @@ for _, server in pairs(servers) do
 	-- 	}
 	-- end
 
-	lspconfig[server].setup(coq.lsp_ensure_capabilities(lsp_opts))
+	lspconfig[server].setup({
+		capabilities = cmp_nvim_lsp.default_capabilities(),
+		on_attach = lsp_opts.on_attach,
+		settings = lsp_opts.settings,
+	})
 end

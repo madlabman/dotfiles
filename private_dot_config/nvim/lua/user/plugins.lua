@@ -34,32 +34,55 @@ return packer.startup(function(use)
 	use("nvim-tree/nvim-web-devicons")
 	use("nvim-tree/nvim-tree.lua")
 
-	use({ "akinsho/bufferline.nvim", tag = "v3.*", requires = "nvim-tree/nvim-web-devicons" })
+	use({ "akinsho/bufferline.nvim", tag = "v3.*" })
+	use("nvim-treesitter/nvim-treesitter-context")
+	use("nvim-treesitter/playground")
 	use("lukas-reineke/indent-blankline.nvim")
 	use("nvim-treesitter/nvim-treesitter")
 	use("nvim-telescope/telescope.nvim")
+	use("nvim-lualine/lualine.nvim")
+	use("Glench/Vim-Jinja2-Syntax")
 	use("lewis6991/gitsigns.nvim")
-    use("Darazaki/indent-o-matic")
+	use("Darazaki/indent-o-matic")
 	use("mechatroner/rainbow_csv")
 	use("RRethy/vim-illuminate")
+	use("windwp/nvim-autopairs")
 	use("numToStr/Comment.nvim")
 	use("stevearc/aerial.nvim")
 	use("github/copilot.vim")
 	use("ruanyl/vim-gh-line")
+	use("folke/trouble.nvim")
 	use("direnv/direnv.vim")
 	use("ggandor/leap.nvim")
 	use("mbbill/undotree")
 
 	-- LSP
 	use("neovim/nvim-lspconfig")
-	use({ "ms-jpq/coq_nvim", branch = "coq" })
+	use("ray-x/lsp_signature.nvim")
+	-- use({ "ms-jpq/coq_nvim", branch = "coq" })
+	-- use({ "ms-jpq/coq.thirdparty", branch = "3p" })
 	use({ "jose-elias-alvarez/null-ls.nvim", requires = "nvim-lua/plenary.nvim" })
+
+	use("hrsh7th/cmp-nvim-lsp")
+	use("hrsh7th/cmp-buffer")
+	use("hrsh7th/cmp-path")
+	use("hrsh7th/nvim-cmp")
 
 	-- Colorschemes
 	use({ "projekt0n/github-nvim-theme", tag = "v0.0.7" })
 	use("nyoom-engineering/oxocarbon.nvim")
 	use("sainnhe/everforest")
 	use("sainnhe/sonokai")
+
+	use({
+		"brenoprata10/nvim-highlight-colors",
+		config = function()
+			require("nvim-highlight-colors").setup()
+		end,
+	})
+
+	-- dev
+	use("rktjmp/hotpot.nvim")
 
 	-- Automatically set up your configuration after cloning packer.nvim
 	-- Put this at the end after all plugins

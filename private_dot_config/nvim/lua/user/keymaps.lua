@@ -27,6 +27,9 @@ keymap("n", "<leader>bd", ":bd<cr>:tabclose<cr>gT", opts)
 keymap("n", "<leader>l", ":bnext<cr>", opts)
 keymap("n", "<leader>h", ":bprevious<cr>", opts)
 
+-- copy to system clipboard
+keymap("v", "Y", '"+y', opts)
+
 -- stay in indent mode
 keymap("v", "<", "<gv", opts)
 keymap("v", ">", ">gv", opts)
@@ -39,10 +42,15 @@ keymap("v", "K", ":m '<-2<CR>gv=gv", opts)
 keymap("n", "<leader>nn", ":NvimTreeToggle<CR>", opts)
 keymap("n", "<leader>nf", ":NvimTreeFindFile<CR>", opts)
 
+keymap("n", "<leader>xx", ":TroubleToggle<CR>", opts)
+
 keymap("n", "<leader>gu", ":Gitsigns reset_hunk<CR>", opts)
+keymap("n", "<leader>gs", ":Gitsigns stage_hunk<CR>", opts)
 keymap("n", "<leader>gr", ":Gitsigns preview_hunk<CR>", opts)
+keymap("n", "<leader>gw", ":Gitsigns toggle_current_line_blame<CR>", opts)
 keymap("n", "]c", ":Gitsigns next_hunk<CR>", opts)
 keymap("n", "[c", ":Gitsigns prev_hunk<CR>", opts)
+
 
 keymap("n", "<F7>", ":AerialToggle!<CR>", opts)
 
@@ -53,7 +61,8 @@ if ok then
 	keymap("n", "<leader>o", function() tbuiltins.buffers({ sort_lastused = true }) end, opts)
 	keymap("n", "<c-p>", function() tbuiltins.find_files() end, opts)
 	keymap("n", "<c-f>", function() tbuiltins.live_grep() end, opts)
-	-- keymap("n", "<c-~>", function() tbuiltins.resume() end, opts)
+	keymap("n", "<F2>", function() tbuiltins.resume() end, opts)
+	keymap("n", "<F1>", function() tbuiltins.treesitter() end, opts)
 end
 
 vim.cmd([[imap <silent><script><expr> <Right> copilot#Accept("\<CR>")]])
