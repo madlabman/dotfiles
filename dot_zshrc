@@ -151,6 +151,8 @@ if hash starship 2>/dev/null; then
 fi
 
 # Source additional files
-# source /opt/google-cloud-sdk/path.zsh.inc
-# source /opt/google-cloud-sdk/completion.zsh.inc
+if hash gcloud 2>/dev/null; then
+    source /opt/google-cloud-sdk/path.zsh.inc
+    source /opt/google-cloud-sdk/completion.zsh.inc
+fi
 # source /usr/share/nvm/init-nvm.sh
