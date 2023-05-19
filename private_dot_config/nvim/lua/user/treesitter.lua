@@ -23,6 +23,14 @@ parser_config.vyper = {
 	},
 	filetype = "vyper", -- if filetype does not match the parser name
 }
+parser_config.gotmpl = {
+	install_info = {
+		url = "https://github.com/ngalaiko/tree-sitter-go-template",
+		files = { "src/parser.c" },
+	},
+	filetype = "gotmpl",
+	used_by = { "gohtmltmpl", "gotexttmpl", "gotmpl", "yaml" },
+}
 
 local status_ok, configs = pcall(require, "nvim-treesitter.configs")
 if not status_ok then
