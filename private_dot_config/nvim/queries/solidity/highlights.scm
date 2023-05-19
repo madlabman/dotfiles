@@ -106,7 +106,6 @@
  "struct"
  "enum"
  "event"
- "error"
  "using"
  "assembly"
  "emit"
@@ -123,7 +122,7 @@
  "calldata"
  "var"
  "constant"
- "unchecked"
+ "error"
  (virtual)
  (override_specifier)
  (yul_leave)
@@ -148,7 +147,6 @@
 [
  "try"
  "catch"
- "revert"
 ] @exception
 
 [
