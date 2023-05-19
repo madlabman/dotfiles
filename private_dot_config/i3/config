@@ -166,6 +166,7 @@ for_window [title="data:, - Chromium"] floating enable
 for_window [window_role="pop-up"] floating enable
 for_window [title="DevTools - Node.js"] floating disable
 for_window [class="frame"] floating disable
+for_window [title="Linear - Automation .*"] floating disable
 
 for_window [class="(.*join\?action\=join.*|.*zoom.*)"] floating enable
 for_window [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom - Licensed Account"] floating disable
@@ -210,7 +211,7 @@ exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec --no-startup-id redshift -l 52.1348:21.0040
 exec --no-startup-id nitrogen --restore; sleep 1; picom -b
 # exec --no-startup-id /usr/lib/xfce4/notifyd/xfce4-notifyd
-exec --no-startup-id /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
+exec_always --no-startup-id /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
 exec --no-startup-id xautolock -time 10 -locker betterlockscreen -l dimblur
 exec --no-startup-id flameshot
 exec --no-startup-id minidlnad -f $HOME/.config/minidlna/minidlna.conf -P $HOME/.cache/minidlna/minidlna.pid
@@ -235,7 +236,7 @@ bindsym $mod+shift+s exec --no-startup-id systemctl suspend
 bindsym XF86Launch4 exec --no-startup-id polybar-ippm next
 
 # screenshot
-bindsym Print exec --no-startup-id i3-scrot
+bindsym Print exec --no-startup-id flameshot full
 bindsym $mod+Shift+w exec --no-startup-id i3-scrot -w
 bindsym Shift+Print exec --no-startup-id flameshot gui
 
