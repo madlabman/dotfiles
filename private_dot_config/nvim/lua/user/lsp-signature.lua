@@ -4,7 +4,10 @@ if not status_ok then
 end
 
 lsp_signature.setup({
+	toggle_key = "<C-x>",
 	handler_opts = {
 		border = "single",
 	},
+	floating_window = false,
+	hint_prefix = "🔩 ",
 })

@@ -1,4 +1,5 @@
 local colorscheme = "oxocarbon"
+vim.opt.bg = "dark"
 
 vim.g.sonokai_style = "shusia"
 vim.g.sonokai_better_performance = 0

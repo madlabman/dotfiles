@@ -34,8 +34,38 @@ local kind_icons = {
 cmp.setup({
 	sources = {
 		{ name = "nvim_lsp" },
-		{ name = "buffer" },
 		{ name = "path" },
+		{
+			name = "buffer",
+			option = {
+				get_bufnrs = function()
+					return vim.api.nvim_list_bufs()
+				end,
+			},
+		},
+	},
+	snippet = {
+		-- We recommend using *actual* snippet engine.
+		-- It's a simple implementation so it might not work in some of the cases.
+		expand = function(args)
+			unpack = unpack or table.unpack
+			local line_num, col = unpack(vim.api.nvim_win_get_cursor(0))
+			local line_text = vim.api.nvim_buf_get_lines(0, line_num - 1, line_num, true)[1]
+			local indent = string.match(line_text, "^%s*")
+			local replace = vim.split(args.body, "\n", true)
+			local surround = string.match(line_text, "%S.*") or ""
+			local surround_end = surround:sub(col)
+
+			replace[1] = surround:sub(0, col - 1) .. replace[1]
+			replace[#replace] = replace[#replace] .. (#surround_end > 1 and " " or "") .. surround_end
+			if indent ~= "" then
+				for i, line in ipairs(replace) do
+					replace[i] = indent .. line
+				end
+			end
+
+			vim.api.nvim_buf_set_lines(0, line_num - 1, line_num, true, replace)
+		end,
 	},
 	formatting = {
 		fields = { "kind", "abbr", "menu" },
@@ -53,8 +83,6 @@ cmp.setup({
 		end,
 	},
 	mapping = cmp.mapping.preset.insert({
-		["<C-k>"] = cmp.mapping.select_prev_item(),
-		["<C-j>"] = cmp.mapping.select_next_item(),
 		["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
 		["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
 		["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
@@ -64,7 +92,17 @@ cmp.setup({
 		}),
 		-- Accept currently selected item. If none selected, `select` first item.
 		-- Set `select` to `false` to only confirm explicitly selected items.
-		["<CR>"] = cmp.mapping.confirm({ select = true }),
+		["<CR>"] = cmp.mapping({
+			i = function(fallback)
+				if cmp.visible() and cmp.get_active_entry() then
+					cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+				else
+					fallback()
+				end
+			end,
+			s = cmp.mapping.confirm({ select = true }),
+			c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+		}),
 		["<Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_next_item()
@@ -91,6 +129,6 @@ cmp.setup({
 		select = false,
 	},
 	experimental = {
-		ghost_text = false, -- this feature conflict with copilot.vim's preview.
+		ghost_text = false, -- this feature conflicts with copilot.vim's preview.
 	},
 })

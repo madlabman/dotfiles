@@ -34,33 +34,49 @@ return packer.startup(function(use)
 	use("nvim-tree/nvim-web-devicons")
 	use("nvim-tree/nvim-tree.lua")
 
-	use({ "akinsho/bufferline.nvim", tag = "v3.*" })
-	use("nvim-treesitter/nvim-treesitter-context")
-	use("nvim-treesitter/playground")
+	use({"nvim-telescope/telescope.nvim", tag = "0.1.1"})
 	use("lukas-reineke/indent-blankline.nvim")
+	use("Eandrju/cellular-automaton.nvim")
 	use("nvim-treesitter/nvim-treesitter")
-	use("nvim-telescope/telescope.nvim")
+	use("mfussenegger/nvim-treehopper")
+	use("nvim-treesitter/playground")
+	use("LinArcX/telescope-env.nvim")
 	use("nvim-lualine/lualine.nvim")
 	use("Glench/Vim-Jinja2-Syntax")
+	use("chrisgrieser/nvim-spider")
 	use("lewis6991/gitsigns.nvim")
 	use("Darazaki/indent-o-matic")
 	use("mechatroner/rainbow_csv")
 	use("RRethy/vim-illuminate")
 	use("windwp/nvim-autopairs")
+	use("Pocco81/true-zen.nvim")
 	use("numToStr/Comment.nvim")
 	use("stevearc/aerial.nvim")
-	use("github/copilot.vim")
+	use("SmiteshP/nvim-navic")
+	use("folke/zen-mode.nvim")
+	use("wellle/targets.vim")
+	use("mhinz/vim-startify")
+	-- use("github/copilot.vim")
 	use("ruanyl/vim-gh-line")
 	use("folke/trouble.nvim")
 	use("direnv/direnv.vim")
+	use("vim-test/vim-test")
 	use("ggandor/leap.nvim")
 	use("mbbill/undotree")
+	-- use("fatih/vim-go")
+
+	use({
+		"folke/which-key.nvim",
+		config = function()
+			vim.o.timeout = true
+			vim.o.timeoutlen = 300
+		end,
+	})
 
 	-- LSP
-	use("neovim/nvim-lspconfig")
 	use("ray-x/lsp_signature.nvim")
-	-- use({ "ms-jpq/coq_nvim", branch = "coq" })
-	-- use({ "ms-jpq/coq.thirdparty", branch = "3p" })
+	use("neovim/nvim-lspconfig")
+
 	use({ "jose-elias-alvarez/null-ls.nvim", requires = "nvim-lua/plenary.nvim" })
 
 	use("hrsh7th/cmp-nvim-lsp")
@@ -69,8 +85,9 @@ return packer.startup(function(use)
 	use("hrsh7th/nvim-cmp")
 
 	-- Colorschemes
-	use({ "projekt0n/github-nvim-theme", tag = "v0.0.7" })
+	use({ "projekt0n/github-nvim-theme", tag = "v1.0.0" })
 	use("nyoom-engineering/oxocarbon.nvim")
+	use("folke/tokyonight.nvim")
 	use("sainnhe/everforest")
 	use("sainnhe/sonokai")
 

@@ -11,15 +11,27 @@ null_ls.setup({
 		null_ls.builtins.diagnostics.hadolint,
 		null_ls.builtins.diagnostics.eslint_d,
 		null_ls.builtins.diagnostics.yamllint,
-		null_ls.builtins.diagnostics.pylint,
-		null_ls.builtins.diagnostics.mypy,
+		null_ls.builtins.diagnostics.jsonlint,
+		-- null_ls.builtins.diagnostics.pylint,
+		null_ls.builtins.diagnostics.ruff, -- much faster in comparison to pylint
+		null_ls.builtins.diagnostics.mypy.with({
+			tmp_dir = "/tmp", -- TODO: make it actually works
+		}),
 
+		null_ls.builtins.diagnostics.cspell.with({
+			filetypes = { "markdown", "text", "tex", "org" },
+		}),
+
+		null_ls.builtins.formatting.trim_whitespace,
 		null_ls.builtins.formatting.prettier,
 		null_ls.builtins.formatting.eslint_d,
 		null_ls.builtins.formatting.stylua,
 		null_ls.builtins.formatting.black,
 		null_ls.builtins.formatting.isort,
+
+		null_ls.builtins.code_actions.cspell,
 	},
+	diagnostics_format = "[#{s}] #{m}",
 	-- you can reuse a shared lspconfig on_attach callback here
 	-- on_attach = function(client, bufnr)
 	-- 	if client.supports_method("textDocument/formatting") then

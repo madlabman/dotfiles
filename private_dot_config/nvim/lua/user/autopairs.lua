@@ -1,12 +1,40 @@
-local status_ok, pairs = pcall(require, "nvim-autopairs")
+local status_ok, npairs = pcall(require, "nvim-autopairs")
 if not status_ok then
 	return
 end
 
-pairs.setup({
-    check_ts = true,
-    ts_config = {
-        lua = { "string" }, -- it will not add pair on that treesitter node
-        javascript = { "template_string" },
-    },
+npairs.setup({
+	check_ts = true,
+	ts_config = {
+		lua = { "string" }, -- it will not add pair on that treesitter node
+		javascript = { "template_string" },
+	},
+	map_bs = false,
+	map_cr = false,
 })
+
+_G.MUtils = {}
+
+MUtils.CR = function()
+	if vim.fn.pumvisible() ~= 0 then
+		if vim.fn.complete_info({ "selected" }).selected ~= -1 then
+			return npairs.esc("<c-y>")
+		else
+			return npairs.esc("<c-e>") .. npairs.autopairs_cr()
+		end
+	else
+		return npairs.autopairs_cr()
+	end
+end
+
+vim.api.nvim_set_keymap("i", "<cr>", "v:lua.MUtils.CR()", { expr = true, noremap = true })
+
+MUtils.BS = function()
+	if vim.fn.pumvisible() ~= 0 and vim.fn.complete_info({ "mode" }).mode == "eval" then
+		return npairs.esc("<c-e>") .. npairs.autopairs_bs()
+	else
+		return npairs.autopairs_bs()
+	end
+end
+
+vim.api.nvim_set_keymap("i", "<bs>", "v:lua.MUtils.BS()", { expr = true, noremap = true })

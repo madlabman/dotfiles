@@ -3,4 +3,14 @@ if not status_ok then
 	return
 end
 
-nvim_tree.setup()
+nvim_tree.setup({
+	hijack_cursor = true,
+	hijack_directories = {
+		enable = true,
+		auto_open = true,
+	},
+	view = {
+		preserve_window_proportions = true,
+		width = {},
+	},
+})

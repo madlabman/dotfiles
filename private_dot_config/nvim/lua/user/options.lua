@@ -11,7 +11,8 @@ vim.opt.hlsearch = true -- highlight all matches on previous search pattern
 vim.opt.showmode = false -- we don't need to see things like -- INSERT -- anymore
 vim.opt.showmatch = true -- show matching brackets when text indicator is over them
 vim.opt.mat = 2 -- how many tenths of a second to blink when matching brackets
-vim.opt.number = true -- print the line number in front of each line
+-- vim.opt.number = true -- print the line number in front of each line
+vim.opt.relativenumber = true -- show relative line numbers in front of each line
 vim.opt.syntax = "ON" -- enable syntax highlight
 vim.opt.listchars = [[tab:→\ ,space:·,nbsp:␣,trail:•,eol:¶,precedes:«,extends:»]]
 vim.opt.laststatus = 3 -- only the last window will always have a status line
@@ -35,9 +36,3 @@ vim.opt.iskeyword:append("-") -- treats words with `-` as single words
 vim.opt.undofile = true
 vim.opt.splitbelow = true -- force all horizontal splits to go below current window
 vim.opt.splitright = true -- force all vertical splits to go to the right of current window
-
--- python comments interfere with modeline
-vim.api.nvim_create_autocmd("BufEnter", {
-	pattern = { "*.py" },
-	command = "setlocal nomodeline",
-})

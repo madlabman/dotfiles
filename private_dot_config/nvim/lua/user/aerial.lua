@@ -3,4 +3,18 @@ if not status_ok then
 	return
 end
 
-aerial.setup()
+aerial.setup({
+	show_guides = true,
+	filter_kind = {
+		"Class",
+		"Constructor",
+		"Enum",
+		"Event",
+		"Function",
+		"Interface",
+		"Module",
+		"Method",
+		"Struct",
+		"Field",
+	},
+})

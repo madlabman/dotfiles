@@ -26,6 +26,7 @@ illuminate.configure({
 		"toggleterm",
 		"DressingSelect",
 		"TelescopePrompt",
+		"help",
 	},
 	filetypes_allowlist = {},
 	modes_denylist = {},

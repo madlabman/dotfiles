@@ -3,22 +3,48 @@ if not status_ok then
 	return
 end
 
-vim.g.coq_settings = {
-	auto_start = "shut-up",
-	keymap = {
-		-- recommended = false,
-		jump_to_mark = "",
-	},
-}
-
--- local status_ok, coq = pcall(require, "coq")
--- if not status_ok then
--- 	return
--- end
-
-local status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-if not status_ok then
+local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+if not has_cmp then
 	return
+end
+
+local has_navic, navic = pcall(require, "nvim-navic")
+if has_navic then
+	navic.setup({
+		icons = {
+			String = " ",
+			Method = " ",
+			Function = " ",
+			Constructor = " ",
+			Field = " ",
+			Variable = " ",
+			Class = " ",
+			Interface = " ",
+			Module = " ",
+			Property = " ",
+			Unit = " ",
+			Key = " ",
+			Enum = " ",
+			Keyword = " ",
+			Color = "",
+			File = "",
+			Folder = "",
+			EnumMember = " ",
+			Constant = " ",
+			Struct = " ",
+			Event = " ",
+			Operator = " ",
+			TypeParameter = " ",
+			Namespace = " ",
+			Number = "󰎠 ",
+			Boolean = " ",
+			Array = "󱒅 ",
+			Object = " ",
+			Null = "󰟢 ",
+		},
+		highlight = true,
+		separator = "  ",
+	})
 end
 
 local servers = {
@@ -26,9 +52,9 @@ local servers = {
 	"lua_ls",
 	"tsserver",
 	"pyright",
-	"solidity",
-	"solidity_ls",
-	-- "solc",
+	-- "solidity_ls",
+	"solidity_ls_nomicfoundation", -- seems to be more responsive
+	"gopls",
 }
 
 -- Mappings.
@@ -52,14 +78,18 @@ local on_attach = function(client, bufnr)
 	vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
 	vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
 	vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
-	vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, bufopts)
-	vim.keymap.set("n", "<space>D", vim.lsp.buf.type_definition, bufopts)
+	-- vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, bufopts)
+	vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, bufopts)
 	vim.keymap.set("n", "gn", vim.lsp.buf.rename, bufopts)
 	vim.keymap.set("n", "gf", vim.lsp.buf.code_action, bufopts)
 	vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
 	vim.keymap.set("n", "<space>f", function()
 		vim.lsp.buf.format({ async = true })
 	end, bufopts)
+
+	if has_navic and client.server_capabilities.documentSymbolProvider then
+		navic.attach(client, bufnr)
+	end
 end
 
 for _, server in pairs(servers) do
@@ -85,13 +115,6 @@ for _, server in pairs(servers) do
 			},
 		}
 	end
-
-	-- if "solc" == server then
-	-- 	local util = require("lspconfig.util")
-	-- 	lsp_opts.settings = {
-	-- 		root_dir = util.root_pattern(".git"),
-	-- 	}
-	-- end
 
 	lspconfig[server].setup({
 		capabilities = cmp_nvim_lsp.default_capabilities(),

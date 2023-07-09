@@ -46,7 +46,7 @@ configs.setup({
 	incremental_selection = {
 		enable = true,
 		keymaps = {
-			init_selection = "gnn",
+			init_selection = "<M-w>",
 			node_incremental = "<M-Up>",
 			node_decremental = "<M-Down>",
 		},
