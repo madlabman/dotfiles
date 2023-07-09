@@ -123,6 +123,7 @@
  "var"
  "constant"
  "error"
+ "revert"
  (virtual)
  (override_specifier)
  (yul_leave)
