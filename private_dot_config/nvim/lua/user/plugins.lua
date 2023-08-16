@@ -96,6 +96,15 @@ return packer.startup(function(use)
 		config = function()
 			require("nvim-highlight-colors").setup()
 		end,
+		ft = {
+			"xml",
+			"css",
+			"scss",
+			"sass",
+			"html",
+			"fnl", -- for themes
+			"lua",
+		},
 	})
 
 	-- dev
