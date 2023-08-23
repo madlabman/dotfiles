@@ -13,4 +13,15 @@ nvim_tree.setup({
 		preserve_window_proportions = true,
 		width = {},
 	},
+	git = {
+		enable = true,
+	},
+	renderer = {
+		highlight_git = true,
+		icons = {
+			show = {
+				git = false,
+			},
+		},
+	},
 })
