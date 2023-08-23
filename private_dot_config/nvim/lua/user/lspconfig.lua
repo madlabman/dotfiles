@@ -90,6 +90,9 @@ local on_attach = function(client, bufnr)
 	if has_navic and client.server_capabilities.documentSymbolProvider then
 		navic.attach(client, bufnr)
 	end
+
+	-- disable semantic_tokens for now
+	client.server_capabilities.semanticTokensProvider = nil
 end
 
 for _, server in pairs(servers) do
