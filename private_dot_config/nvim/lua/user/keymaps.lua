@@ -108,3 +108,5 @@ keymap("n", "<leader>zf", ":TZFocus<CR>", opts)
 keymap("n", "<leader>f", function()
 	vim.lsp.buf.format({ bufnr = 0 })
 end, opts)
+
+keymap("n", "gx", [[:execute '!xdg-open ' . shellescape(expand('<cfile>'), 1)<CR><CR>]], opts)
