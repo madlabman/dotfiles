@@ -95,6 +95,7 @@ alias mc=". /usr/lib/mc/mc-wrapper.sh"
 alias lg="lazygit"
 alias ro='yay -Rs $(yay -Qtdq)'
 alias gbdd='git branch -a | grep -v `$(git branch -a | grep remotes | cut -d/"" -f3-)`/#/-e | xargs git branch -D'
+alias upgrade="yay -Syu"
 
 # User configuration
 
