@@ -143,6 +143,7 @@ if [ -s "$HOME/.nvm/nvm.sh" ]; then
 fi
 
 if hash bat 2>/dev/null; then
+    export MANROFFOPT="-c"  # see https://github.com/sharkdp/bat/issues/2593
     export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 fi
 
