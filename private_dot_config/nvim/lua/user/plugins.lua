@@ -102,7 +102,7 @@ return packer.startup(function(use)
 			"scss",
 			"sass",
 			"html",
-			"fnl", -- for themes
+			"fennel", -- for themes
 			"lua",
 		},
 	})
