@@ -157,3 +157,6 @@ if hash gcloud 2>/dev/null; then
     source /opt/google-cloud-sdk/completion.zsh.inc
 fi
 # source /usr/share/nvm/init-nvm.sh
+if hash jump 2>/dev/null; then
+    eval "$(jump shell)"
+fi
