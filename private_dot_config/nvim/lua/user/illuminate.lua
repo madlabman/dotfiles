@@ -3,8 +3,6 @@ if not status_ok then
 	return
 end
 
-vim.g.Illuminate_ftblacklist = { "alpha", "NvimTree" }
-
 illuminate.configure({
 	providers = {
 		"lsp",
@@ -34,4 +32,5 @@ illuminate.configure({
 	providers_regex_syntax_denylist = {},
 	providers_regex_syntax_allowlist = {},
 	under_cursor = true,
+	large_file_cutoff = 10000,
 })

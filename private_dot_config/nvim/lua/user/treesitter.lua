@@ -41,6 +41,16 @@ configs.setup({
 	highlight = {
 		enable = true, -- false will disable the whole extension
 		-- disable = { "yaml" },
+		disable = function(lang, bufnr)
+			if vim.api.nvim_buf_line_count(bufnr) > 50000 then
+				return true
+			end
+			if vim.fn.wordcount().chars > 100000 then
+				return true
+			end
+
+			return false
+		end,
 		additional_vim_regex_highlighting = false,
 	},
 	incremental_selection = {
