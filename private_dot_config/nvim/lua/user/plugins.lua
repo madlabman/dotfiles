@@ -66,7 +66,7 @@ return packer.startup(function(use)
 	use("ggandor/leap.nvim")
 	use("j-hui/fidget.nvim")
 	use("mbbill/undotree")
-	-- use("fatih/vim-go")
+	use("danymat/neogen")
 
 	use({
 		"folke/which-key.nvim",
