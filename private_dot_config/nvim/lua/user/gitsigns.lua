@@ -3,4 +3,8 @@ if not status_ok then
 	return
 end
 
-gitsigns.setup()
+gitsigns.setup({
+	current_line_blame_opts = {
+		delay = 200,
+	},
+})
