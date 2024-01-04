@@ -132,6 +132,12 @@ end, opts)
 
 keymap("n", "gx", [[:execute '!xdg-open ' . shellescape(expand('<cfile>'), 1)<CR><CR>]], opts)
 
+-- See `:help vim.diagnostic.*` for documentation on any of the below functions
+keymap("n", "<space>e", vim.diagnostic.open_float, opts)
+keymap("n", "[d", vim.diagnostic.goto_prev, opts)
+keymap("n", "]d", vim.diagnostic.goto_next, opts)
+keymap("n", "<space>q", vim.diagnostic.setloclist, opts)
+
 keymap("n", "<leader>cc", function()
 	require("neogen").generate()
 end, opts)

@@ -8,61 +8,46 @@ if not has_cmp then
 	return
 end
 
-local has_navic, navic = pcall(require, "nvim-navic")
-if has_navic then
-	navic.setup({
-		icons = {
-			String = " ",
-			Method = " ",
-			Function = " ",
-			Constructor = " ",
-			Field = " ",
-			Variable = " ",
-			Class = " ",
-			Interface = " ",
-			Module = " ",
-			Property = " ",
-			Unit = " ",
-			Key = " ",
-			Enum = " ",
-			Keyword = " ",
-			Color = "",
-			File = "",
-			Folder = "",
-			EnumMember = " ",
-			Constant = " ",
-			Struct = " ",
-			Event = " ",
-			Operator = " ",
-			TypeParameter = " ",
-			Namespace = " ",
-			Number = "󰎠 ",
-			Boolean = " ",
-			Array = "󱒅 ",
-			Object = " ",
-			Null = "󰟢 ",
-		},
-		highlight = true,
-		separator = "  ",
-	})
-end
+local default_capabilities = cmp_nvim_lsp.default_capabilities()
 
-local servers = {
-	"clangd",
-	"lua_ls",
-	"pyright",
-	-- "solidity_ls",
-	"solidity_ls_nomicfoundation", -- seems to be more responsive
-	"gopls",
+-- https://github.com/Ackee-Blockchain/wake
+require("lspconfig.configs").wake = {
+	default_config = {
+		cmd = { "nc", "localhost", "65432" }, -- NOTE: should be started manually
+		filetypes = { "solidity" },
+		root_dir = lspconfig.util.root_pattern(".git", "foundry.toml"),
+		settings = {
+			wake = {
+				configuration = {
+					use_toml_if_present = true,
+					toml_path = "wake.toml",
+				},
+				lsp = {
+					compilation_delay = 15, -- NOTE: it doesn't work I think
+					find_references = {
+						include_declarations = true,
+					},
+					code_lens = {
+						enable = false,
+					},
+					detectors = {
+						only = {},
+					},
+				},
+			},
+		},
+	},
 }
 
--- Mappings.
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
-local opts = { noremap = true, silent = true }
-vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, opts)
-vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
-vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
-vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist, opts)
+local servers = {
+	"gopls",
+	"jdtls",
+	"lua_ls",
+	"pyright",
+	"rust_analyzer",
+	"typos_lsp",
+	"wake",
+}
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
@@ -77,26 +62,36 @@ local on_attach = function(client, bufnr)
 	vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
 	vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
 	vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
-	-- vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, bufopts)
+	vim.keymap.set("n", "<C-s>", vim.lsp.buf.signature_help, bufopts)
+	vim.keymap.set("i", "<C-s>", vim.lsp.buf.signature_help, bufopts)
 	vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, bufopts)
 	vim.keymap.set("n", "gn", vim.lsp.buf.rename, bufopts)
-	vim.keymap.set("n", "gf", vim.lsp.buf.code_action, bufopts)
-	vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
+	vim.keymap.set("n", "ga", vim.lsp.buf.code_action, bufopts)
+	vim.keymap.set("n", "gr", function()
+		local has_trouble, trouble = pcall(require, "trouble")
+		if has_trouble then
+			trouble.open("lsp_references")
+		else
+			vim.lsp.buf.references()
+		end
+	end, bufopts)
 	vim.keymap.set("n", "<space>f", function()
 		vim.lsp.buf.format({ async = true })
 	end, bufopts)
 
-	if has_navic and client.server_capabilities.documentSymbolProvider then
-		navic.attach(client, bufnr)
-	end
-
 	-- disable semantic_tokens for now
 	client.server_capabilities.semanticTokensProvider = nil
+
+	-- disable formatting for servers (handled by conform.nvim)
+	client.server_capabilities.documentFormattingProvider = nil
+	client.server_capabilities.documentRangeFormattingProvider = nil
 end
 
 for _, server in pairs(servers) do
 	local lsp_opts = {
 		on_attach = on_attach,
+		cmd = lspconfig[server].cmd or nil,
+		on_init = lspconfig[server].on_init or nil,
 	}
 
 	if "lua_ls" == server then
@@ -119,9 +114,10 @@ for _, server in pairs(servers) do
 	end
 
 	lspconfig[server].setup({
-		capabilities = cmp_nvim_lsp.default_capabilities(),
+		capabilities = default_capabilities,
 		on_attach = lsp_opts.on_attach,
 		settings = lsp_opts.settings,
+		cmd = lsp_opts.cmd,
 	})
 end
 
