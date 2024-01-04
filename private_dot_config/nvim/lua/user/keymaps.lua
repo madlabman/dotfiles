@@ -44,6 +44,10 @@ keymap("v", ">", ">gv", opts)
 keymap("v", "J", ":m '>+1<CR>gv=gv", opts)
 keymap("v", "K", ":m '<-2<CR>gv=gv", opts)
 
+-- remap for dealing with word wrap
+keymap("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, noremap = true })
+keymap("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, noremap = true })
+
 -- plugins below
 keymap("n", "<leader>nn", ":NvimTreeToggle<CR>", opts)
 keymap("n", "<leader>nf", ":NvimTreeFindFile<CR>", opts)
