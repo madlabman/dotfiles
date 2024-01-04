@@ -42,10 +42,11 @@ configs.setup({
 		enable = true, -- false will disable the whole extension
 		-- disable = { "yaml" },
 		disable = function(lang, bufnr)
-			if vim.api.nvim_buf_line_count(bufnr) > 50000 then
+			local lines = vim.api.nvim_buf_line_count(bufnr)
+			if lines > 50000 then
 				return true
 			end
-			if vim.fn.wordcount().chars > 100000 then
+			if lines == 1 and vim.fn.wordcount().chars > 100000 then
 				return true
 			end
 
