@@ -131,3 +131,7 @@ keymap("n", "<leader>f", function()
 end, opts)
 
 keymap("n", "gx", [[:execute '!xdg-open ' . shellescape(expand('<cfile>'), 1)<CR><CR>]], opts)
+
+keymap("n", "<leader>cc", function()
+	require("neogen").generate()
+end, opts)
