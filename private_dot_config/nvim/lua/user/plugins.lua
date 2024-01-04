@@ -90,10 +90,18 @@ return packer.startup(function(use)
 	use("ray-x/lsp_signature.nvim")
 	use("neovim/nvim-lspconfig")
 
+	-- nvim-cmp
 	use("hrsh7th/cmp-nvim-lsp")
 	use("hrsh7th/cmp-buffer")
 	use("hrsh7th/cmp-path")
 	use("hrsh7th/nvim-cmp")
+	use("hrsh7th/cmp-calc")
+	use("ray-x/cmp-treesitter")
+	use({
+		"L3MON4D3/LuaSnip",
+		tag = "v2.0.0",
+		requires = { "saadparwaiz1/cmp_luasnip", "rafamadriz/friendly-snippets" },
+	})
 
 	-- Colorschemes
 	use({ "projekt0n/github-nvim-theme", tag = "v1.0.0" })

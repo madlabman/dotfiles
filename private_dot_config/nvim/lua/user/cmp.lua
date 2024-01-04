@@ -3,6 +3,8 @@ if not status_ok then
 	return
 end
 
+local luasnip = require("luasnip") -- required
+
 local kind_icons = {
 	Text = "",
 	Method = "",
@@ -28,43 +30,60 @@ local kind_icons = {
 	Struct = "",
 	Event = "",
 	Operator = "",
+	Type = "",
 	TypeParameter = "",
 }
 
 cmp.setup({
-	sources = {
+	sources = cmp.config.sources({
+		{ name = "calc" },
 		{ name = "nvim_lsp" },
+	}, {
+		{ name = "treesitter" },
 		{ name = "path" },
 		{
 			name = "buffer",
 			option = {
+				-- NOTE: comment it to temporary disable looking up all buffers if it returns too many results
 				get_bufnrs = function()
 					return vim.api.nvim_list_bufs()
 				end,
 			},
+			keyword_length = 5,
+		},
+	}),
+	-- @see https://github.com/tjdevries/config_manager/blob/master/xdg_config/nvim/after/plugin/completion.lua
+	sorting = {
+		-- TODO: Would be cool to add stuff like "See variable names before method names" in rust, or something like that.
+		comparators = {
+			cmp.config.compare.offset,
+			cmp.config.compare.exact,
+			cmp.config.compare.score,
+			cmp.config.compare.recently_used,
+
+			-- copied from cmp-under, but I don't think I need the plugin for this.
+			-- I might add some more of my own.
+			function(entry1, entry2)
+				local _, entry1_under = entry1.completion_item.label:find("^_+")
+				local _, entry2_under = entry2.completion_item.label:find("^_+")
+				entry1_under = entry1_under or 0
+				entry2_under = entry2_under or 0
+				if entry1_under > entry2_under then
+					return false
+				elseif entry1_under < entry2_under then
+					return true
+				end
+			end,
+
+			cmp.config.compare.kind,
+			cmp.config.compare.sort_text,
+			cmp.config.compare.length,
+			cmp.config.compare.order,
 		},
 	},
 	snippet = {
-		-- We recommend using *actual* snippet engine.
-		-- It's a simple implementation so it might not work in some of the cases.
 		expand = function(args)
-			unpack = unpack or table.unpack
-			local line_num, col = unpack(vim.api.nvim_win_get_cursor(0))
-			local line_text = vim.api.nvim_buf_get_lines(0, line_num - 1, line_num, true)[1]
-			local indent = string.match(line_text, "^%s*")
-			local replace = vim.split(args.body, "\n", true)
-			local surround = string.match(line_text, "%S.*") or ""
-			local surround_end = surround:sub(col)
-
-			replace[1] = surround:sub(0, col - 1) .. replace[1]
-			replace[#replace] = replace[#replace] .. (#surround_end > 1 and " " or "") .. surround_end
-			if indent ~= "" then
-				for i, line in ipairs(replace) do
-					replace[i] = indent .. line
-				end
-			end
-
-			vim.api.nvim_buf_set_lines(0, line_num - 1, line_num, true, replace)
+			luasnip.lsp_expand(args.body)
 		end,
 	},
 	formatting = {
@@ -72,19 +91,19 @@ cmp.setup({
 		format = function(entry, vim_item)
 			vim_item.kind = kind_icons[vim_item.kind]
 			vim_item.menu = ({
-				nvim_lsp = "",
-				nvim_lua = "",
-				luasnip = "",
-				buffer = "",
-				path = "",
-				emoji = "",
+				treesitter = "",
+				nvim_lsp = "",
+				luasnip = "󰩫",
+				buffer = "",
+				path = "",
+				calc = "",
 			})[entry.source.name]
 			return vim_item
 		end,
 	},
 	mapping = cmp.mapping.preset.insert({
-		["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
-		["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
+		["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-3), { "i", "c" }),
+		["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(3), { "i", "c" }),
 		["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
 		["<C-e>"] = cmp.mapping({
 			i = cmp.mapping.abort(),
@@ -106,23 +125,21 @@ cmp.setup({
 		["<Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_next_item()
+			elseif luasnip.expand_or_locally_jumpable() then
+				luasnip.expand_or_jump()
 			else
 				fallback()
 			end
-		end, {
-			"i",
-			"s",
-		}),
+		end, { "i", "s" }),
 		["<S-Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_prev_item()
+			elseif luasnip.locally_jumpable(-1) then
+				luasnip.jump(-1)
 			else
 				fallback()
 			end
-		end, {
-			"i",
-			"s",
-		}),
+		end, { "i", "s" }),
 	}),
 	confirm_opts = {
 		behavior = cmp.ConfirmBehavior.Replace,
