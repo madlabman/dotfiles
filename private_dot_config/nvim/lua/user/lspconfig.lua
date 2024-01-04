@@ -50,7 +50,6 @@ end
 local servers = {
 	"clangd",
 	"lua_ls",
-	"tsserver",
 	"pyright",
 	-- "solidity_ls",
 	"solidity_ls_nomicfoundation", -- seems to be more responsive
@@ -125,3 +124,8 @@ for _, server in pairs(servers) do
 		settings = lsp_opts.settings,
 	})
 end
+
+require("typescript-tools").setup({
+	capabilities = default_capabilities,
+	on_attach = on_attach,
+})
