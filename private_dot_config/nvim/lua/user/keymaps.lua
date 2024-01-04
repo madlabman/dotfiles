@@ -53,9 +53,26 @@ keymap("n", "<leader>xx", ":TroubleToggle<CR>", opts)
 keymap("n", "<leader>gu", ":Gitsigns reset_hunk<CR>", opts)
 keymap("n", "<leader>gs", ":Gitsigns stage_hunk<CR>", opts)
 keymap("n", "<leader>gr", ":Gitsigns preview_hunk<CR>", opts)
-keymap("n", "<leader>gw", ":Gitsigns toggle_current_line_blame<CR>", opts)
-keymap("n", "]c", ":Gitsigns next_hunk<CR>", opts)
-keymap("n", "[c", ":Gitsigns prev_hunk<CR>", opts)
+
+keymap("n", "]c", function()
+	if vim.wo.diff then
+		return "]c"
+	end
+	vim.schedule(function()
+		vim.cmd([[Gitsigns next_hunk]])
+	end)
+	return "<Ignore>"
+end, { expr = true })
+
+keymap("n", "[c", function()
+	if vim.wo.diff then
+		return "[c"
+	end
+	vim.schedule(function()
+		vim.cmd([[Gitsigns prev_hunk]])
+	end)
+	return "<Ignore>"
+end, { expr = true })
 
 keymap("n", "<F7>", ":AerialToggle!<CR>", opts)
 
