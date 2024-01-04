@@ -40,18 +40,22 @@
 (type_name "(" @punctuation.bracket "=>" @punctuation.delimiter ")" @punctuation.bracket)
 
 ; Definitions
-(struct_declaration 
+(struct_declaration
   name: (identifier) @type)
-(enum_declaration 
+(enum_declaration
   name: (identifier) @type)
 (contract_declaration
-  name: (identifier) @type) 
+  name: (identifier) @type)
 (library_declaration
-  name: (identifier) @type) 
+  name: (identifier) @type)
 (interface_declaration
   name: (identifier) @type)
-(event_definition 
-  name: (identifier) @type) 
+(event_definition
+  name: (identifier) @type)
+(error_declaration
+  name: (identifier) @type)
+(revert_statement
+  error: (identifier) @type)
 
 (function_definition
   name:  (identifier) @function)
@@ -68,7 +72,7 @@
 (struct_member name: (identifier) @property)
 (enum_value) @constant
 
-; Invocations 
+; Invocations
 (emit_statement . (identifier) @type)
 (modifier_invocation (identifier) @function)
 
@@ -109,25 +113,33 @@
  "using"
  "assembly"
  "emit"
- "public"
- "internal"
- "private"
- "external"
- "pure"
- "view"
- "payable"
  "modifier"
- "memory"
- "storage"
- "calldata"
  "var"
- "constant"
  "error"
  "revert"
+ "abstract"
  (virtual)
  (override_specifier)
  (yul_leave)
 ] @keyword
+
+[
+  "public"
+  "internal"
+  "private"
+  "external"
+  "pure"
+  "view"
+  "payable"
+  (immutable)
+] @type.qualifier
+
+[
+  "memory"
+  "storage"
+  "calldata"
+  "constant"
+] @storageclass
 
 [
  "for"
@@ -144,6 +156,10 @@
  "case"
  "default"
 ] @conditional
+
+(ternary_expression
+  "?" @conditional.ternary
+  ":" @conditional.ternary)
 
 [
  "try"
@@ -217,3 +233,11 @@
   "delete"
   "new"
 ] @keyword.operator
+
+((comment) @comment.documentation
+  (#lua-match? @comment.documentation "^///[^/]"))
+((comment) @comment.documentation
+  (#lua-match? @comment.documentation "^///$"))
+
+((comment) @comment.documentation
+  (#lua-match? @comment.documentation "^/[*][*][^*].*[*]/$"))
