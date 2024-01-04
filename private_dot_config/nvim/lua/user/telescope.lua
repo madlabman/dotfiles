@@ -12,6 +12,18 @@ telescope.setup({
 			i = { ["<c-t>"] = trouble.open_with_trouble },
 			n = { ["<c-t>"] = trouble.open_with_trouble },
 		},
+		-- horizontal space costs more
+		layout_strategy = "vertical",
+		borderchars = {
+			"─",
+			"│",
+			"─",
+			"│",
+			"┌",
+			"┐",
+			"┘",
+			"└",
+		},
 	},
 	pickers = {
 		buffers = {
@@ -26,3 +38,7 @@ telescope.setup({
 
 telescope.load_extension("aerial")
 telescope.load_extension("env")
+
+vim.api.nvim_create_user_command("BLines", function()
+	require("telescope.builtin").current_buffer_fuzzy_find()
+end, {})
