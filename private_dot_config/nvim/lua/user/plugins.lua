@@ -62,6 +62,7 @@ return packer.startup(function(use)
 	use("direnv/direnv.vim")
 	use("vim-test/vim-test")
 	use("ggandor/leap.nvim")
+	use("j-hui/fidget.nvim")
 	use("mbbill/undotree")
 	-- use("fatih/vim-go")
 
