@@ -1,10 +1,10 @@
-local status_ok, _ = pcall(require, "nvim-treesitter")
-if not status_ok then
+local ok, _ = pcall(require, "nvim-treesitter")
+if not ok then
 	return
 end
 
-local status_ok, parsers = pcall(require, "nvim-treesitter.parsers")
-if not status_ok then
+local ok, parsers = pcall(require, "nvim-treesitter.parsers")
+if not ok then
 	return
 end
 
@@ -32,8 +32,8 @@ parser_config.gotmpl = {
 	used_by = { "gohtmltmpl", "gotexttmpl", "gotmpl", "yaml" },
 }
 
-local status_ok, configs = pcall(require, "nvim-treesitter.configs")
-if not status_ok then
+local ok, configs = pcall(require, "nvim-treesitter.configs")
+if not ok then
 	return
 end
 

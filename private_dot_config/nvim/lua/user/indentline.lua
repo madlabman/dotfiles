@@ -1,11 +1,10 @@
-local status_ok, indent_blankline = pcall(require, "ibl")
-if not status_ok then
+local ok, indent_blankline = pcall(require, "ibl")
+if not ok then
 	return
 end
 
 indent_blankline.setup({
 	indent = {
-		-- char = "▏"
 		char = "┆",
 	},
 	scope = {

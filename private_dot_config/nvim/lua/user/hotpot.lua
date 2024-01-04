@@ -1,5 +1,5 @@
-local status_ok, hotpot = pcall(require, "hotpot")
-if not status_ok then
+local ok, hotpot = pcall(require, "hotpot")
+if not ok then
 	return
 end
 

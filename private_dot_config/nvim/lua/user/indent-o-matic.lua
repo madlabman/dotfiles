@@ -1,5 +1,5 @@
-local status_ok, iom = pcall(require, "indent-o-matic")
-if not status_ok then
+local ok, iom = pcall(require, "indent-o-matic")
+if not ok then
 	return
 end
 

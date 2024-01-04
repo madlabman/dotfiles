@@ -1,5 +1,5 @@
-local status_ok, leap = pcall(require, "leap")
-if not status_ok then
+local ok, leap = pcall(require, "leap")
+if not ok then
 	return
 end
 
