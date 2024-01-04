@@ -69,6 +69,15 @@ return packer.startup(function(use)
 	use("danymat/neogen")
 
 	use({
+		"pwntester/octo.nvim",
+		requires = {
+			"nvim-lua/plenary.nvim",
+			"nvim-telescope/telescope.nvim",
+			"nvim-tree/nvim-web-devicons",
+		},
+	})
+
+	use({
 		"folke/which-key.nvim",
 		config = function()
 			vim.o.timeout = true
