@@ -34,6 +34,7 @@
 (type_name) @type
 (primitive_type) @type
 (user_defined_type (identifier) @type)
+(user_defined_type_definition (identifier) @type)
 
 (payable_conversion_expression "payable" @type)
 ; Ensures that delimiters in mapping( ... => .. ) are not colored like types
@@ -64,7 +65,7 @@
   name:  (identifier) @function)
 (yul_evm_builtin) @function.builtin
 
-; Use contructor coloring for special functions
+; Use constructor coloring for special functions
 (constructor_definition "constructor" @constructor)
 (fallback_receive_definition "receive" @constructor)
 (fallback_receive_definition "fallback" @constructor)
@@ -106,6 +107,7 @@
  "contract"
  "interface"
  "library"
+ "type"
  "is"
  "struct"
  "enum"
@@ -121,6 +123,7 @@
  (virtual)
  (override_specifier)
  (yul_leave)
+ "let"
 ] @keyword
 
 [
