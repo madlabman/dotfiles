@@ -4,6 +4,9 @@
 autoload -Uz compinit
 compinit
 
+# Configure oh-my-zsh
+zstyle :omz:plugins:yarn global-path no
+
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -71,7 +74,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git direnv ssh-agent tmux gh zsh-autosuggestions dirhistory)
+plugins=(git direnv ssh-agent tmux gh zsh-autosuggestions dirhistory yarn)
 
 source $ZSH/oh-my-zsh.sh
 
