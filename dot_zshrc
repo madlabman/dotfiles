@@ -4,6 +4,19 @@
 autoload -Uz compinit
 compinit
 
+# Configure ZSH
+HISTFILE=$HOME/.zsh_history
+HISTSIZE=100000
+SAVEHIST=100000
+
+setopt INC_APPEND_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_SAVE_NO_DUPS
+setopt SHARE_HISTORY
+
 # Configure oh-my-zsh
 zstyle :omz:plugins:yarn global-path no
 
