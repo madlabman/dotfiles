@@ -1,0 +1,6 @@
+[Desktop Entry]
+
+Type=Application
+Icon=picom
+Name=Reset picom
+Exec=bash -c "pkill picom ; sleep 1 ; picom -b"
