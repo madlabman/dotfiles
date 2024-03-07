@@ -1,0 +1,8 @@
+[Unit]
+Description=nvchecker service
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/.config/nvchecker
+ExecStart=/usr/bin/nvchecker-notify

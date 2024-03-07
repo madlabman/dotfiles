@@ -1,0 +1,39 @@
+[__config__]
+oldver = "oldver.json"
+newver = "newver.json"
+
+[linux-lts]
+source = "archpkg"
+archpkg = "linux-lts"
+
+[chromium]
+source = "archpkg"
+archpkg = "chromium"
+strip_release = true
+
+[firefox]
+source = "archpkg"
+archpkg = "firefox"
+strip_release = true
+
+[telegram-desktop]
+source = "archpkg"
+archpkg = "telegram-desktop"
+strip_release = true
+
+[wake]
+source = "github"
+github = "Ackee-Blockchain/wake"
+use_latest_release = true
+
+[bun]
+source = "github"
+github = "oven-sh/bun"
+use_latest_release = true
+
+[discord]
+source = "cmd"
+cmd = '''
+curl -sI 'https://discord.com/api/download?platform=linux&format=tar.gz' |\
+    rg 'location.*discord-(\d+\.\d+\.\d+)\.tar.gz' -r '$1'
+'''
