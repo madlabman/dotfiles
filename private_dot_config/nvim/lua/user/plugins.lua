@@ -35,6 +35,7 @@ return packer.startup(function(use)
 	use("nvim-tree/nvim-tree.lua")
 
 	use({ "nvim-telescope/telescope.nvim", tag = "0.1.5" })
+	use("nvim-treesitter/nvim-treesitter-context")
 	use("lukas-reineke/indent-blankline.nvim")
 	use("Eandrju/cellular-automaton.nvim")
 	use("nvim-treesitter/nvim-treesitter")
