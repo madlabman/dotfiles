@@ -31,6 +31,16 @@ parser_config.gotmpl = {
 	filetype = "gotmpl",
 	used_by = { "gohtmltmpl", "gotexttmpl", "gotmpl", "yaml" },
 }
+parser_config.solidity = {
+	install_info = {
+		url = "https://github.com/madlabman/tree-sitter-solidity",
+		files = { "src/parser.c" },
+		branch = "master",
+		generate_requires_npm = false,
+		requires_generate_from_grammar = false,
+	},
+	filetype = "solidity",
+}
 
 local ok, configs = pcall(require, "nvim-treesitter.configs")
 if not ok then

@@ -3,6 +3,9 @@
 (identifier) @variable
 (yul_identifier) @variable
 
+((identifier) @constant
+ (#lua-match? @constant "^[A-Z][A-Z_0-9]*$"))
+
 ; Pragma
 (pragma_directive) @tag
 (solidity_version_comparison_operator _ @tag)
@@ -67,8 +70,8 @@
 
 ; Use constructor coloring for special functions
 (constructor_definition "constructor" @constructor)
-(fallback_receive_definition "receive" @constructor)
-(fallback_receive_definition "fallback" @constructor)
+(receive_definition "receive" @constructor)
+(fallback_definition "fallback" @constructor)
 
 (struct_member name: (identifier) @property)
 (enum_value) @constant
@@ -123,6 +126,7 @@
  (virtual)
  (override_specifier)
  (yul_leave)
+ (unchecked)
  "let"
 ] @keyword
 
