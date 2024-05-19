@@ -106,7 +106,7 @@ return packer.startup(function(use)
 
 	-- LSP
 	use("pmizio/typescript-tools.nvim")
-	use("ray-x/lsp_signature.nvim")
+	-- use("ray-x/lsp_signature.nvim")
 	use("neovim/nvim-lspconfig")
 
 	-- nvim-cmp
