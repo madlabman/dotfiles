@@ -85,6 +85,25 @@ return packer.startup(function(use)
 		end,
 	})
 
+	use({
+		"akinsho/toggleterm.nvim",
+		config = function()
+			require("toggleterm").setup({
+				size = 20,
+				open_mapping = [[<c-\>]],
+				hide_numbers = true,
+				shade_filetypes = {},
+				shade_terminals = false,
+				start_in_insert = true,
+				insert_mappings = true,
+				persist_size = true,
+				direction = "horizontal",
+				close_on_exit = true,
+				shell = vim.o.shell,
+			})
+		end,
+	})
+
 	-- LSP
 	use("pmizio/typescript-tools.nvim")
 	use("ray-x/lsp_signature.nvim")
