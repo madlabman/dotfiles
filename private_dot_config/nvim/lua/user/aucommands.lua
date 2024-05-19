@@ -22,6 +22,11 @@ vim.api.nvim_create_autocmd("BufEnter", {
 	command = "setlocal commentstring=//%s",
 })
 
+-- disable copilot on buffer enter
+vim.api.nvim_create_autocmd("BufEnter", {
+	pattern = { "*" },
+	command = "let b:copilot_enabled=0",
+})
 -- close some filetypes with <q>
 vim.api.nvim_create_autocmd("FileType", {
 	group = vim.api.nvim_create_augroup("close_with_q", { clear = true }),
