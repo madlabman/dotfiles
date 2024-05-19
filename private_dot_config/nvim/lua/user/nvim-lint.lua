@@ -70,6 +70,10 @@ lint.linters.actionlint.condition = function(ctx)
 	return ctx.filename:find(".github")
 end
 
+lint.linters.solhint.condition = function(ctx)
+	return not ctx.filename:find(".t.sol$")
+end
+
 lint.linters.eslint_d.condition = function(ctx)
 	local root = find_nearest_directory(".git")
 	if not root then
