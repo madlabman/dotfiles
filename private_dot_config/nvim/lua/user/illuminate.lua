@@ -5,7 +5,6 @@ end
 
 illuminate.configure({
 	providers = {
-		"lsp",
 		"treesitter",
 		"regex",
 	},
@@ -38,7 +37,7 @@ illuminate.configure({
 -- @see https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/editor.lua
 local function map(key, dir, buffer)
 	vim.keymap.set("n", key, function()
-		require("illuminate")["goto_" .. dir .. "_reference"](false)
+		require("illuminate")["goto_" .. dir .. "_reference"]()
 	end, { desc = dir:sub(1, 1):upper() .. dir:sub(2) .. " Reference", buffer = buffer })
 end
 
