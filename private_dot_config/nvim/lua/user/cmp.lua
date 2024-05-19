@@ -6,32 +6,32 @@ end
 local luasnip = require("luasnip") -- required
 
 local kind_icons = {
-	Text = "",
-	Method = "",
-	Function = "",
-	Constructor = "",
-	Field = "",
-	Variable = "",
-	Class = "",
-	Interface = "",
-	Module = "",
+	Text = "",
+	Method = "",
+	Function = "󰊕",
+	Constructor = "",
+	Field = "󰌖",
+	Variable = "󰂡",
+	Class = "",
+	Interface = "", -- 
+	Module = "󰅩",
 	Property = "",
 	Unit = "",
-	Value = "",
+	Value = "󰎠",
 	Enum = "",
-	Keyword = "",
-	Snippet = "",
-	Color = "",
-	File = "",
+	Keyword = "󱕴",
+	Snippet = "",
+	Color = "",
+	File = "",
 	Reference = "",
-	Folder = "",
+	Folder = "󰉋",
 	EnumMember = "",
-	Constant = "",
+	Constant = "",
 	Struct = "",
-	Event = "",
-	Operator = "",
-	Type = "",
-	TypeParameter = "",
+	Event = "󱐋",
+	Operator = "",
+	Type = "󰬛",
+	TypeParameter = "󰬛",
 }
 
 cmp.setup({
@@ -91,7 +91,7 @@ cmp.setup({
 		format = function(entry, vim_item)
 			vim_item.kind = kind_icons[vim_item.kind]
 			vim_item.menu = ({
-				treesitter = "",
+				treesitter = "󰔱",
 				nvim_lsp = "",
 				luasnip = "󰩫",
 				buffer = "",
