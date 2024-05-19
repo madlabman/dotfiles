@@ -18,6 +18,9 @@ keymap("n", "<C-k>", "<C-W>k", opts)
 keymap("n", "<C-h>", "<C-W>h", opts)
 keymap("n", "<C-l>", "<C-W>l", opts)
 
+-- leave terminal mode
+keymap("t", "<Esc>", "<C-\\><C-n>", opts)
+
 -- resize with arrows
 keymap("n", "<C-Up>", ":resize -2<CR>", opts)
 keymap("n", "<C-Down>", ":resize +2<CR>", opts)
@@ -78,9 +81,11 @@ keymap("n", "[c", function()
 	return "<Ignore>"
 end, { expr = true })
 
-keymap("n", "<F7>", ":AerialToggle!<CR>", opts)
+keymap("n", "]C", function()
+	require("treesitter-context").go_to_context(vim.v.count1)
+end, opts)
 
-keymap("n", "<leader>t", ":TestNearest<CR>", opts)
+keymap("n", "<F7>", ":AerialToggle!<CR>", opts)
 
 keymap("n", "<space>u", vim.cmd.UndotreeToggle, opts)
 
