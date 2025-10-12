@@ -1,8 +1,8 @@
 -- vim.opt.clipboard = "unnamedplus" -- allows neovim to access the system clipboard
-vim.opt.guifont = "Iosevka 11" -- Font for GUI
+vim.opt.guifont = "Iosevka Nerd Font:10" -- Font for GUI
 vim.opt.cmdheight = 0
 vim.opt.title = true
-vim.opt.titlestring = "nvim @ " .. string.gsub(vim.fn.getcwd(), os.getenv("HOME"), "~")
+vim.opt.titlestring = "nvim @ " .. string.gsub(vim.fn.getcwd(), os.getenv("HOME") or "/root", "~")
 vim.opt.wildignore = { "*.o", "*~", "*.pyc", "__pycache__", "*/.git/*", "*/.hg/*", "*/.svn/*", "*/.DS_Store" }
 vim.opt.ignorecase = true -- ignore case in search patterns
 vim.opt.smartcase = true -- when searching try to be smart about cases
@@ -20,8 +20,9 @@ vim.opt.cursorline = true -- highlight current line
 vim.opt.writebackup = false -- don't make a backup before overwriting a file
 vim.opt.backup = false -- we use VCS anyway
 vim.opt.swapfile = false -- only in-memory view
-vim.opt.updatetime = 300 -- faster completion (4000ms default)
+vim.opt.updatetime = 100 -- faster completion (4000ms default)
 vim.opt.termguicolors = true -- set term gui colors (most terminals support this)
+vim.opt.colorcolumn = "120" -- line length guide
 vim.opt.signcolumn = "yes" -- always show the signcolumn
 vim.opt.expandtab = true -- use spaces instead of tabs
 vim.opt.shiftwidth = 4 -- the number of spaces inserted for each indentation
@@ -29,9 +30,19 @@ vim.opt.tabstop = 4 -- 1 tab == 4 spaces
 vim.opt.linebreak = true -- wrap lines at textwidth
 -- vim.opt.showbreak = "󱞤" -- symbol to prepend wrapped lines with
 vim.opt.showbreak = "󱞵" -- symbol to prepend wrapped lines with
-vim.opt.wrap = true -- wrap lines
+vim.opt.wrap = false -- no wrap for lines
 vim.opt.textwidth = 120 -- symbols to wrap text at
 vim.opt.iskeyword:append("-") -- treats words with `-` as single words
 vim.opt.undofile = true
 vim.opt.splitbelow = true -- force all horizontal splits to go below current window
 vim.opt.splitright = true -- force all vertical splits to go to the right of current window
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
+vim.opt.shortmess:append("c")
+vim.opt.diffopt:append("vertical")
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldenable = false
+vim.opt.comments:append(":///")
+-- Append 'r' and 'o' to formatoptions
+vim.opt.formatoptions:append("r")
+vim.opt.formatoptions:append("o")

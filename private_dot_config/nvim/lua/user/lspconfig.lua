@@ -3,19 +3,20 @@ if not ok then
 	return
 end
 
-local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-if not has_cmp then
-	return
-end
-
-local default_capabilities = cmp_nvim_lsp.default_capabilities()
+-- local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+-- if not has_cmp then
+-- 	return
+-- end
+--
+-- local default_capabilities = cmp_nvim_lsp.default_capabilities()
+local default_capabilities = require("blink.cmp").get_lsp_capabilities()
 
 -- https://github.com/Ackee-Blockchain/wake
 require("lspconfig.configs").wake = {
 	default_config = {
 		cmd = { "nc", "localhost", "65432" }, -- NOTE: should be started manually
 		filetypes = { "solidity" },
-		root_dir = lspconfig.util.root_pattern(".git", "foundry.toml"),
+		root_dir = lspconfig.util.root_pattern("foundry.toml"),
 		settings = {
 			wake = {
 				configuration = {
@@ -42,10 +43,13 @@ require("lspconfig.configs").wake = {
 local servers = {
 	"gopls",
 	"jdtls",
+	"clangd",
 	"lua_ls",
 	"pyright",
 	"rust_analyzer",
 	"typos_lsp",
+	"taplo",
+	"terraformls",
 	"wake",
 }
 
@@ -59,12 +63,33 @@ local on_attach = function(client, bufnr)
 	-- See `:help vim.lsp.*` for documentation on any of the below functions
 	local bufopts = { noremap = true, silent = true, buffer = bufnr }
 	vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
-	vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
+	vim.keymap.set("n", "gd", function()
+		-- local has_trouble, trouble = pcall(require, "trouble")
+		-- if has_trouble then
+		-- 	trouble.open("lsp_definitions")
+		-- else
+		vim.lsp.buf.definition()
+		-- end
+	end, bufopts)
 	vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
-	vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
+	vim.keymap.set("n", "gi", function()
+		local has_trouble, trouble = pcall(require, "trouble")
+		if has_trouble then
+			trouble.open("lsp_implementations")
+		else
+			vim.lsp.buf.implementation()
+		end
+	end, bufopts)
 	vim.keymap.set("n", "<C-s>", vim.lsp.buf.signature_help, bufopts)
 	vim.keymap.set("i", "<C-s>", vim.lsp.buf.signature_help, bufopts)
-	vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, bufopts)
+	vim.keymap.set("n", "gt", function()
+		local has_trouble, trouble = pcall(require, "trouble")
+		if has_trouble then
+			trouble.open("lsp_type_definitions")
+		else
+			vim.lsp.buf.type_definition()
+		end
+	end, bufopts)
 	vim.keymap.set("n", "gn", vim.lsp.buf.rename, bufopts)
 	vim.keymap.set("n", "ga", vim.lsp.buf.code_action, bufopts)
 	vim.keymap.set("n", "gr", function()
@@ -79,8 +104,11 @@ local on_attach = function(client, bufnr)
 		vim.lsp.buf.format({ async = true })
 	end, bufopts)
 
-	-- disable semantic_tokens for now
-	client.server_capabilities.semanticTokensProvider = nil
+	if client.name ~= "clangd" then
+		-- In clang it's useful to have conditional defines properly highlighted,
+		-- for the rest disable semantic_tokens for now
+		client.server_capabilities.semanticTokensProvider = nil
+	end
 
 	-- disable formatting for servers (handled by conform.nvim)
 	client.server_capabilities.documentFormattingProvider = nil
@@ -124,4 +152,8 @@ end
 require("typescript-tools").setup({
 	capabilities = default_capabilities,
 	on_attach = on_attach,
+})
+
+vim.diagnostic.config({
+	virtual_text = { current_line = true },
 })

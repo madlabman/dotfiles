@@ -15,7 +15,7 @@
 (event_definition
   name: (identifier) @event)
 (error_declaration
-  name: (identifier) @error)
+  name: (identifier) @field)
 (function_definition
   name:  (identifier) @method)
 (modifier_definition

@@ -128,6 +128,12 @@
  (yul_leave)
  (unchecked)
  "let"
+
+ "memory"
+ "storage"
+ "calldata"
+ "constant"
+
 ] @keyword
 
 [
@@ -141,12 +147,12 @@
   (immutable)
 ] @type.qualifier
 
-[
-  "memory"
-  "storage"
-  "calldata"
-  "constant"
-] @storageclass
+; [
+;  "memory"
+;  "storage"
+;  "calldata"
+;  "constant"
+; ] @storageclass
 
 [
  "for"

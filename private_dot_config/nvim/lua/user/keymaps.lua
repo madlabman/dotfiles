@@ -1,8 +1,10 @@
 local keymap = vim.keymap.set -- shorten
 local opts = { silent = true } -- silent keymap option
 
--- map leader to , some day to space
-vim.g.mapleader = ","
+-- disable <C-LeftMouse>, it's used to open links
+keymap("n", "<C-LeftMouse>", "<Nop>", opts)
+keymap("v", "<C-LeftMouse>", "<Nop>", opts)
+keymap("t", "<C-LeftMouse>", "<Nop>", opts)
 
 -- fast saving
 keymap("n", "<leader>w", ":w!<CR>", opts)
@@ -105,7 +107,7 @@ if ok then
 	local builtin = require("telescope.builtin")
 
 	keymap("n", "<leader>o", function()
-		builtin.buffers({ sort_lastused = true })
+		builtin.buffers({ sort_mru = true, max_entries = 8, ignore_current_buffer = true })
 	end, opts)
 	keymap("n", "<c-p>", function()
 		builtin.find_files()
@@ -115,9 +117,6 @@ if ok then
 			additional_args = { "--ignore-case" },
 		})
 	end, opts)
-	keymap("n", "<c-e>", function()
-		telescope.extensions.env.env()
-	end, opts)
 	keymap("n", "<F2>", function()
 		builtin.resume()
 	end, opts)
@@ -126,23 +125,39 @@ if ok then
 	end, opts)
 end
 
-vim.cmd([[imap <silent><script><expr> <Right> copilot#Accept("\<CR>")]])
-vim.g.copilot_no_tab_map = true
+-- vim.cmd([[imap <silent><script><expr> <Right> copilot#Accept("\<CR>")]])
+-- vim.g.copilot_no_tab_map = true
 
 keymap("n", "<leader>zf", ":TZFocus<CR>", opts)
 
 keymap("n", "<leader>f", function()
-	vim.lsp.buf.format({ bufnr = 0 })
+	-- vim.lsp.buf.format({ bufnr = 0 })
+	require("conform").format({
+		-- I recommend these options. See :help conform.format for details.
+		lsp_fallback = true,
+		timeout_ms = 1000,
+		async = true,
+	})
 end, opts)
 
 keymap("n", "gx", [[:execute '!xdg-open ' . shellescape(expand('<cfile>'), 1)<CR><CR>]], opts)
 
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-keymap("n", "<space>e", vim.diagnostic.open_float, opts)
-keymap("n", "[d", vim.diagnostic.goto_prev, opts)
-keymap("n", "]d", vim.diagnostic.goto_next, opts)
 keymap("n", "<space>q", vim.diagnostic.setloclist, opts)
+keymap("n", "<space>e", vim.diagnostic.open_float, opts)
+keymap("n", "[d", function()
+	vim.diagnostic.jump({ count = -1 })
+end, opts)
+keymap("n", "]d", function()
+	vim.diagnostic.jump({ count = 1 })
+end, opts)
 
 keymap("n", "<leader>cc", function()
 	require("neogen").generate()
 end, opts)
+
+if vim.fn.executable("lazygit") == 1 then
+	keymap("n", "<leader>lg", function()
+		require("snacks").lazygit.open()
+	end, opts)
+end
