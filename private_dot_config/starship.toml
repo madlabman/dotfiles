@@ -13,5 +13,93 @@ style = "bold yellow"
 format = 'via [${symbol}(${version}) ]($style)'
 
 [git_status]
-untracked = ""
-stashed = "*"
+format = "[⎇ ](fg:208)$all_status$ahead_behind "
+ahead = "[⇡${count}](red)"
+behind = "[⇣${count}](cyan)"
+staged = "[●](green)"
+modified = "[●](blue)"
+untracked = "[●](yellow)"
+stashed = ""
+deleted = ""
+renamed = ""
+disabled = true
+
+[custom.foundry]
+command = ''' forge --version | rg 'Version: (\d+\.\d+\.\d+)' -r 'forge $1' -o '''
+detect_files = ["foundry.toml"]
+style = "bold white"
+
+[c]
+disabled = true
+
+[container]
+disabled = true
+
+[aws]
+disabled = true
+
+[azure]
+disabled = true
+
+[cobol]
+disabled = true
+
+[crystal]
+disabled = true
+
+[daml]
+disabled = true
+
+[dart]
+disabled = true
+
+[docker_context]
+disabled = true
+
+[dotnet]
+disabled = true
+
+[elixir]
+disabled = true
+
+[erlang]
+disabled = true
+
+[haxe]
+disabled = true
+
+[julia]
+disabled = true
+
+[hg_branch]
+disabled = true
+
+[opa]
+disabled = true
+
+[openstack]
+disabled = true
+
+[pijul_channel]
+disabled = true
+
+[pulumi]
+disabled = true
+
+[raku]
+disabled = true
+
+[red]
+disabled = true
+
+[singularity]
+disabled = true
+
+[swift]
+disabled = true
+
+[vcsh]
+disabled = true
+
+[solidity]
+disabled = true
