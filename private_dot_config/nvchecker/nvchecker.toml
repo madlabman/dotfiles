@@ -11,9 +11,19 @@ source = "archpkg"
 archpkg = "chromium"
 strip_release = true
 
+[vivaldi]
+source = "archpkg"
+archpkg = "vivaldi"
+strip_release = true
+
 [firefox]
 source = "archpkg"
 archpkg = "firefox"
+strip_release = true
+
+[zen-browser-bin]
+source = "aur"
+archpkg = "zen-browser-bin"
 strip_release = true
 
 [telegram-desktop]
@@ -21,19 +31,22 @@ source = "archpkg"
 archpkg = "telegram-desktop"
 strip_release = true
 
+[neovim]
+source = "archpkg"
+archpkg = "neovim"
+strip_release = true
+
 [wake]
 source = "github"
 github = "Ackee-Blockchain/wake"
 use_latest_release = true
 
-[bun]
+[prysm]
 source = "github"
-github = "oven-sh/bun"
+github = "prysmaticlabs/prysm"
 use_latest_release = true
 
-[discord]
-source = "cmd"
-cmd = '''
-curl -sI 'https://discord.com/api/download?platform=linux&format=tar.gz' |\
-    rg 'location.*discord-(\d+\.\d+\.\d+)\.tar.gz' -r '$1'
-'''
+[nethermind]
+source = "github"
+github = "NethermindEth/nethermind"
+use_latest_release = true
