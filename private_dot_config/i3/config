@@ -207,7 +207,6 @@ exec --no-startup-id nitrogen --restore; sleep 1; picom -b
 # exec --no-startup-id /usr/lib/xfce4/notifyd/xfce4-notifyd
 exec_always --no-startup-id /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
 exec --no-startup-id xautolock -time 10 -locker betterlockscreen -l dimblur
-exec --no-startup-id flameshot
 exec --no-startup-id xidlehook --not-when-fullscreen --not-when-audio --timer 900 "betterlockscreen -l dimblur --show-layout" ""
 exec --no-startup-id QT_ENABLE_HIGHDPI_SCALING=0 flameshot
 exec --no-startup-id minidlnad -f $HOME/.config/minidlna/minidlna.conf -P $HOME/.cache/minidlna/minidlna.pid
@@ -236,9 +235,6 @@ bindsym XF86Launch4 exec --no-startup-id polybar-ippm next
 
 # screenshot
 bindsym Print exec --no-startup-id flameshot full
-bindsym $mod+Shift+w exec --no-startup-id i3-scrot -w
-bindsym Shift+Print exec --no-startup-id flameshot gui
-bindsym Print exec --no-startup-id i3-scrot -w
 bindsym Shift+Print exec --no-startup-id QT_ENABLE_HIGHDPI_SCALING=0 flameshot gui
 
 # scratchpad
