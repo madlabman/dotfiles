@@ -26,6 +26,7 @@ vec4 window_shader() {
     // It keeps red untouch, I don't remember how, but it's intentional.
     // It's like: get the value of hue in hsl, get the red part and
     // mix it. step is like a ternary operator, I think.
-    c = mix(vec4(vec3(g), c.a), c, step(0.9583, h));
+    // c = mix(vec4(vec3(g), c.a), c, step(0.9583, h));
+    c = vec4(vec3(g), c.a);
     return c;
 }
