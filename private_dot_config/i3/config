@@ -54,10 +54,10 @@ bindsym $mod+Escape exec --no-startup-id rofi -show window -theme material -icon
 bindsym $mod+z exec --no-startup-id rofi -show emoji -theme material -modi emoji -dpi 144
 
 # change focus
-bindsym $mod+j focus left
-bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+semicolon focus right
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -79,7 +79,7 @@ bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
-bindsym $mod+h split h
+bindsym $mod+semicolon split h
 
 # split in vertical orientation
 bindsym $mod+v split v
@@ -96,7 +96,7 @@ bindsym $mod+e layout toggle split
 bindsym $mod+Shift+f floating toggle
 
 # change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
+bindsym $mod+\ focus mode_toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
@@ -105,8 +105,7 @@ bindsym $mod+a focus parent
 #bindsym $mod+d focus child
 
 # move workspace to another screen
-#bindsym $mod+m move workspace to output right
-
+bindsym $mod+m move workspace to output next
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
 set $ws1 "term"
@@ -147,17 +146,16 @@ bindsym $mod+Shift+0 move container to workspace $ws10
 # binding applications and workspaces
 assign [class="Firefox"] $ws2
 assign [class="Google-chrome"] $ws2
+assign [class="Chromium"] $ws2
 assign [class="Code"] $ws3
 assign [class="jetbrains-(?i)"] $ws3
 assign [class="TelegramDesktop"] $ws10
-assign [class="VK"] $ws10
 assign [class="slack"] $ws10
 
 assign [title="data:, - Chromium"] $ws7
 
 # binding mode for applications
 # for_window [class="TelegramDesktop"] floating enable
-for_window [class="VK"] floating enable
 for_window [class="Transmission-gtk"] floating enable
 for_window [class="OpenRGB"] floating enable
 for_window [class="Skype"] floating enable
@@ -166,11 +164,8 @@ for_window [title="data:, - Chromium"] floating enable
 for_window [window_role="pop-up"] floating enable
 for_window [title="DevTools - Node.js"] floating disable
 for_window [class="frame"] floating disable
-for_window [title="Linear - Automation .*"] floating disable
 
-for_window [class="(.*join\?action\=join.*|.*zoom.*)"] floating enable
-for_window [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom - Licensed Account"] floating disable
-for_window [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom Meeting"] floating disable
+for_window [class="Heynote"] move scratchpad
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -187,16 +182,16 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym semicolon resize grow width 10 px or 10 ppt
+        bindsym h resize shrink width 10 px
+        bindsym j resize grow height 10 px
+        bindsym k resize shrink height 10 px
+        bindsym l resize grow width 10 px
 
         # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 25 px or 10 ppt
-        bindsym Down resize grow height 25 px or 10 ppt
-        bindsym Up resize shrink height 25 px or 10 ppt
-        bindsym Right resize grow width 25 px or 10 ppt
+        bindsym Left resize shrink width 50 px
+        bindsym Down resize grow height 50 px
+        bindsym Up resize shrink height 50 px
+        bindsym Right resize grow width 50 px
 
         # back to normal: Enter or Escape or $mod+r
         bindsym Return mode "default"
@@ -208,26 +203,30 @@ bindsym $mod+r mode "resize"
 
 # autostart
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-exec --no-startup-id redshift -l 52.1348:21.0040
 exec --no-startup-id nitrogen --restore; sleep 1; picom -b
 # exec --no-startup-id /usr/lib/xfce4/notifyd/xfce4-notifyd
 exec_always --no-startup-id /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
 exec --no-startup-id xautolock -time 10 -locker betterlockscreen -l dimblur
 exec --no-startup-id flameshot
+exec --no-startup-id xidlehook --not-when-fullscreen --not-when-audio --timer 900 "betterlockscreen -l dimblur --show-layout" ""
+exec --no-startup-id QT_ENABLE_HIGHDPI_SCALING=0 flameshot
 exec --no-startup-id minidlnad -f $HOME/.config/minidlna/minidlna.conf -P $HOME/.cache/minidlna/minidlna.pid
 exec --no-startup-id dex -ae i3
+exec --no-startup-id languagetool --http --port 8081 --allow-origin "*" --config $HOME/.config/LanguageTool/server.properties
+exec_always --no-startup-id heynote
 
 # pulse audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id ~/.config/i3/volume.sh up #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id ~/.config/i3/volume.sh down #decrease sound volume
-bindsym XF86AudioMute exec --no-startup-id ~/.config/i3/volume.sh toggle # mute sound
+bindsym XF86AudioRaiseVolume exec --no-startup-id ~/.config/i3/volume.sh up
+bindsym XF86AudioLowerVolume exec --no-startup-id ~/.config/i3/volume.sh down
+bindsym XF86AudioMute exec --no-startup-id ~/.config/i3/volume.sh toggle
+bindsym XF86AudioMicMute exec --no-startup-id ~/.config/i3/volume.sh mic
 
 # screen brightness controls
 bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +10% # increase screen brightness
 bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 10%- # decrease screen brightness
 
 # lock
-bindsym $mod+shift+x exec --no-startup-id betterlockscreen -l dimblur
+bindsym $mod+shift+x exec --no-startup-id betterlockscreen -l dimblur --show-layout
 
 # sleep
 bindsym $mod+shift+s exec --no-startup-id systemctl suspend
@@ -239,6 +238,8 @@ bindsym XF86Launch4 exec --no-startup-id polybar-ippm next
 bindsym Print exec --no-startup-id flameshot full
 bindsym $mod+Shift+w exec --no-startup-id i3-scrot -w
 bindsym Shift+Print exec --no-startup-id flameshot gui
+bindsym Print exec --no-startup-id i3-scrot -w
+bindsym Shift+Print exec --no-startup-id QT_ENABLE_HIGHDPI_SCALING=0 flameshot gui
 
 # scratchpad
 bindsym $mod+Shift+minus move scratchpad
