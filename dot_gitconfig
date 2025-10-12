@@ -1,9 +1,13 @@
+[user]
+	email = 10616301+madlabman@users.noreply.github.com
+	name = madlabman
+	signingkey = 23DA1ACCE6F0389B
 [commit]
 	gpgsign = true
 [tag]
 	gpgSign = true
 [core]
-	pager = diff-so-fancy
+	; pager = diff-so-fancy
 [interactive]
 	diffFilter = diff-so-fancy --patch
 [color]
@@ -23,3 +27,16 @@
 	whitespace = red reverse
 [rebase]
 	autoStash = true
+[rerere]
+	enabled = true
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+[diff]
+	external = difft
+[init]
+	defaultBranch = master
+[delta]
+    side-by-side = true
