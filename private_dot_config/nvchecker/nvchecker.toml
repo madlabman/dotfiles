@@ -50,3 +50,8 @@ use_latest_release = true
 source = "github"
 github = "NethermindEth/nethermind"
 use_latest_release = true
+
+[mev-boost]
+source = "github"
+github = "flashbots/mev-boost"
+use_latest_release = true
