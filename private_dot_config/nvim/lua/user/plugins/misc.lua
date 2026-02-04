@@ -5,6 +5,7 @@ return {
 	{ "ruanyl/vim-gh-line" },
 	{
 		"mechatroner/rainbow_csv",
+		enabled = false,
 		config = function()
 			local oxocarbon = require("oxocarbon").oxocarbon
 			local colorpairs = {
