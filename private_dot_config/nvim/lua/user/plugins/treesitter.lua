@@ -94,7 +94,7 @@ return {
 				install_info = {
 					url = "https://github.com/madlabman/tree-sitter-solidity",
 					files = { "src/parser.c" },
-					branch = "master",
+					revision = "62a4b7f2537002cb035757b624a252579dd9d960",
 					generate_requires_npm = false,
 					requires_generate_from_grammar = false,
 				},
