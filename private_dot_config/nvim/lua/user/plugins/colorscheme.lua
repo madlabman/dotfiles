@@ -33,7 +33,7 @@ return {
 		end,
 	},
 	{
-		"nyoom-engineering/oxocarbon.nvim",
+		"madlabman/oxocarbon.nvim",
 		lazy = true,
 		dependencies = {
 			"rktjmp/hotpot.nvim",
