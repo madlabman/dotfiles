@@ -29,6 +29,7 @@ return {
 				"query",
 				"regex",
 				"solidity",
+
 				"toml",
 				"typescript",
 				"vim",
@@ -47,7 +48,8 @@ return {
 					if lines == 1 and vim.fn.wordcount().chars > 100000 then
 						return true
 					end
-					if vim.fn.wordcount().bytes / 1024 > 320 then
+					-- 1 MiB of file size limit
+					if vim.fn.wordcount().bytes / 1024 > 1024 then
 						return true
 					end
 
