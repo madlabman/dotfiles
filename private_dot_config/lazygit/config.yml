@@ -1,0 +1,21 @@
+---
+gui:
+  nerdFontsVersion: 3
+  border: single
+  spinner:
+    frames:
+      - ⠋
+      - ⠙
+      - ⠹
+      - ⠸
+      - ⠼
+      - ⠴
+      - ⠦
+      - ⠧
+      - ⠇
+      - ⠏
+
+git:
+  pagers:
+    - pager: diff-so-fancy
+    - externalDiffCommand: "difft --color=always --display=inline"
