@@ -19,3 +19,8 @@ git:
   pagers:
     - pager: diff-so-fancy
     - externalDiffCommand: "difft --color=always --display=inline"
+
+keybinding:
+  universal:
+    copyToClipboard: "y"
+    copyFileInfoToClipboard: <c-o>
