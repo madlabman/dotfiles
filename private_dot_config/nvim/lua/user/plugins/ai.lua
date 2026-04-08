@@ -1,28 +1,31 @@
 return {
 	{
 		"olimorris/codecompanion.nvim",
+		version = "^19.0.0",
 		opts = {
 			adapters = {
-				llama = function()
-					return require("codecompanion.adapters").extend("openai_compatible", {
-						name = "llama",
-						formatted_name = "llama.cpp",
-						schema = {
-							model = {
-								default = "FOSS",
+				http = {
+					llama = function()
+						return require("codecompanion.adapters").extend("openai_compatible", {
+							name = "llama",
+							formatted_name = "llama.cpp",
+							schema = {
+								model = {
+									default = "FOSS",
+								},
 							},
-						},
-						env = {
-							url = "http://127.0.0.1:8080",
-						},
-					})
-				end,
+							env = {
+								url = "http://llama.home.lab:8080",
+							},
+						})
+					end,
+				}
 			},
-			strategies = {
+			interactions = {
 				inline = {
 					adapter = {
-						name = "copilot",
-						model = "claude-sonnet-4",
+						name = "llama",
+						model = "gpt-oss-120b",
 						_ = {
 							"gpt-4.1",
 							"gpt-5-mini",
@@ -43,16 +46,16 @@ return {
 			},
 			prompt_library = {
 				["Fix grammar"] = {
-					strategy = "inline",
+					interaction = "inline",
 					description = "Fix grammar in the selected text block",
 					opts = {
-						index = 1,
-						is_default = true,
+						index = 1,  -- probably removed
 						is_slash_cmd = true,
 						modes = { "v" },
-						short_name = "grammar",
+						alias = "grammar",
 						auto_submit = true,
 						user_prompt = false,
+						placement = "replace",
 						stop_context_insertion = true,
 					},
 					prompts = {
@@ -146,7 +149,7 @@ For comment blocks, maintain the appropriate comment syntax for the programming 
 			vim.api.nvim_create_autocmd("User", {
 				pattern = "CodeCompanionRequestFinished",
 				group = group,
-				callback = function(request)
+				callback = function(_)
 					if CODECOMPANION_FIDGET_HANDLE ~= nil then
 						CODECOMPANION_FIDGET_HANDLE:finish()
 					end
