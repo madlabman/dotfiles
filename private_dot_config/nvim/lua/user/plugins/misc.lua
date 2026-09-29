@@ -3,6 +3,7 @@ return {
 	{ "wellle/targets.vim" },
 	{ "wuwe1/vim-huff" },
 	{ "ruanyl/vim-gh-line" },
+	{ "Julian/lean.nvim" },
 	{
 		"mechatroner/rainbow_csv",
 		enabled = false,
