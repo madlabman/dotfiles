@@ -1,110 +1,99 @@
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
+		lazy = false,
 		build = ":TSUpdate",
-		event = { "BufEnter" },
-		-- lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
-		lazy = true,
-		cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
-		opts = {
-			ensure_installed = {
-				"bash",
-				"c",
-				"comment",
-				-- "dockerfile",
-				"fennel",
-				"gitignore",
-				"go",
-				"gotmpl",
-				"html",
-				"javascript",
-				"jsdoc",
-				"json",
-				"jsonc",
-				"just",
-				"lua",
-				"markdown",
-				"markdown_inline",
-				"python",
-				"query",
-				"regex",
-				"solidity",
+		config = function()
+			local treesitter = require("nvim-treesitter")
 
-				"toml",
-				"typescript",
-				"vim",
-				"vimdoc",
-				"vyper",
-				"xml",
-				"yaml",
-			},
-			highlight = {
-				enable = true, -- false will disable the whole extension
-				disable = function(lang, bufnr)
-					local lines = vim.api.nvim_buf_line_count(bufnr)
-					if lines > 50000 then
-						return true
-					end
-					if lines == 1 and vim.fn.wordcount().chars > 100000 then
-						return true
-					end
-					-- 1 MiB of file size limit
-					if vim.fn.wordcount().bytes / 1024 > 1024 then
-						return true
-					end
-
-					return false
+			vim.api.nvim_create_autocmd("User", {
+				pattern = "TSUpdate",
+				callback = function()
+					-- Keep the grammar used by the local Solidity queries.
+					require("nvim-treesitter.parsers").solidity = {
+						install_info = {
+							url = "https://github.com/madlabman/tree-sitter-solidity",
+							revision = "62a4b7f2537002cb035757b624a252579dd9d960",
+						},
+					}
 				end,
-				additional_vim_regex_highlighting = false,
-			},
-			incremental_selection = {
-				enable = true,
-				keymaps = {
-					init_selection = "<M-w>",
-					node_incremental = "<M-Up>",
-					node_decremental = "<M-Down>",
-				},
-			},
-		},
-		config = function(_, opts)
-			local parsers = require("nvim-treesitter.parsers")
+			})
 
-			local parser_config = parsers.get_parser_configs()
-			parser_config.vyper = {
-				install_info = {
-					url = "https://github.com/madlabman/tree-sitter-vyper", -- local path or git repo
-					files = {
-						"src/parser.c",
-						"src/scanner.cc",
-					},
-					-- optional entries:
-					branch = "master", -- default branch in case of git repo if different from master
-					generate_requires_npm = false, -- if stand-alone parser without npm dependencies
-					requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
-				},
-				filetype = "vyper", -- if filetype does not match the parser name
-			}
-			parser_config.gotmpl = {
-				install_info = {
-					url = "https://github.com/ngalaiko/tree-sitter-go-template",
-					files = { "src/parser.c" },
-				},
-				filetype = "gotmpl",
-				used_by = { "gohtmltmpl", "gotexttmpl", "gotmpl", "yaml" },
-			}
-			parser_config.solidity = {
-				install_info = {
-					url = "https://github.com/madlabman/tree-sitter-solidity",
-					files = { "src/parser.c" },
-					revision = "62a4b7f2537002cb035757b624a252579dd9d960",
-					generate_requires_npm = false,
-					requires_generate_from_grammar = false,
-				},
-				filetype = "solidity",
-			}
+			vim.treesitter.language.register("gotmpl", { "gohtmltmpl", "gotexttmpl" })
+			vim.treesitter.language.register("json", "jsonc")
+			vim.api.nvim_create_user_command("TSInstallConfigured", function()
+				treesitter.install({
+					"bash",
+					"c",
+					"comment",
+					"fennel",
+					"gitignore",
+					"go",
+					"gotmpl",
+					"html",
+					"javascript",
+					"jsdoc",
+					"json",
+					"just",
+					"lua",
+					"markdown",
+					"markdown_inline",
+					"python",
+					"query",
+					"regex",
+					"solidity",
+					"toml",
+					"typescript",
+					"vim",
+					"vimdoc",
+					"xml",
+					"yaml",
+				})
+			end, {})
+			-- Skip installed parsers absent from the registry, such as geas.
+			vim.api.nvim_create_user_command("TSUpdate", function(args)
+				local available = {}
+				for _, lang in ipairs(treesitter.get_available()) do
+					available[lang] = true
+				end
+				local requested = #args.fargs > 0 and args.fargs or treesitter.get_installed()
+				local supported = vim.tbl_filter(function(lang)
+					return available[lang] == true
+				end, requested)
+				if #supported > 0 then
+					treesitter.update(supported, { summary = true })
+				end
+			end, { nargs = "*", force = true })
 
-			local configs = require("nvim-treesitter.configs")
-			configs.setup(opts)
+			local group = vim.api.nvim_create_augroup("user_treesitter", { clear = true })
+			vim.api.nvim_create_autocmd("FileType", {
+				group = group,
+				callback = function(event)
+					local buf = event.buf
+					local is_fff_preview = vim.api.nvim_buf_get_name(buf):match("fffile preview$") ~= nil
+					if vim.bo[buf].buftype ~= "" and not is_fff_preview then
+						return
+					end
+					local lines = vim.api.nvim_buf_line_count(buf)
+					if lines > 50000 or vim.api.nvim_buf_get_offset(buf, lines) > 1024 * 1024 then
+						return
+					end
+					local lang = vim.treesitter.language.get_lang(vim.bo[buf].filetype)
+					if lang and vim.treesitter.language.add(lang) then
+						vim.treesitter.start(buf)
+					end
+				end,
+			})
+
+			vim.keymap.set("n", "<M-w>", function()
+				vim.treesitter.select("parent")
+			end)
+			vim.keymap.set("x", "<M-Up>", function()
+				vim.treesitter.select("parent")
+			end)
+			vim.keymap.set("x", "<M-Down>", function()
+				vim.treesitter.select("child")
+			end)
 		end,
 	},
 }

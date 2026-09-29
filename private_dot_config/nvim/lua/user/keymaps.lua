@@ -57,11 +57,11 @@ keymap("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, noremap = true })
 keymap("n", "<leader>nn", ":NvimTreeToggle<CR>", opts)
 keymap("n", "<leader>nf", ":NvimTreeFindFile<CR>", opts)
 
-keymap("n", "<leader>xx", ":TroubleToggle<CR>", opts)
+keymap("n", "<leader>xx", ":Trouble diagnostics toggle<CR>", opts)
 
 keymap("n", "<leader>gu", ":Gitsigns reset_hunk<CR>", opts)
 keymap("n", "<leader>gs", ":Gitsigns stage_hunk<CR>", opts)
-keymap("n", "<leader>gr", ":Gitsigns preview_hunk<CR>", opts)
+keymap("n", "<leader>gr", ":Gitsigns preview_hunk_inline<CR>", opts)
 
 keymap("n", "]c", function()
 	if vim.wo.diff then
@@ -83,10 +83,6 @@ keymap("n", "[c", function()
 	return "<Ignore>"
 end, { expr = true })
 
-keymap("n", "]C", function()
-	require("treesitter-context").go_to_context(vim.v.count1)
-end, opts)
-
 keymap("n", "<F7>", ":AerialToggle!<CR>", opts)
 
 keymap("n", "<space>u", vim.cmd.UndotreeToggle, opts)
@@ -102,20 +98,19 @@ keymap("n", "<leader>k", function()
 	vim.lsp.buf.signature_help()
 end, { silent = true, noremap = true, desc = "toggle signature" })
 
+keymap("n", "<c-p>", function()
+	require("fff").find_files()
+end, opts)
+keymap("n", "<c-f>", function()
+	require("fff").live_grep()
+end, opts)
+
 local ok, telescope = pcall(require, "telescope")
 if ok then
 	local builtin = require("telescope.builtin")
 
 	keymap("n", "<leader>o", function()
 		builtin.buffers({ sort_mru = true, max_entries = 8, ignore_current_buffer = true })
-	end, opts)
-	keymap("n", "<c-p>", function()
-		builtin.find_files()
-	end, opts)
-	keymap("n", "<c-f>", function()
-		builtin.live_grep({
-			additional_args = { "--ignore-case" },
-		})
 	end, opts)
 	keymap("n", "<F2>", function()
 		builtin.resume()
@@ -134,7 +129,7 @@ keymap("n", "<leader>f", function()
 	-- vim.lsp.buf.format({ bufnr = 0 })
 	require("conform").format({
 		-- I recommend these options. See :help conform.format for details.
-		lsp_fallback = true,
+		lsp_format = "fallback",
 		timeout_ms = 1000,
 		async = true,
 	})

@@ -50,7 +50,6 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 		if kb > 320 then
 			if vim.g.loaded_illuminate == 1 then
 				require("illuminate").freeze_buf()
-				vim.cmd([[TSBufDisable illuminate]])
 				vim.notify("illuminate disabled for the large buffer")
 			end
 

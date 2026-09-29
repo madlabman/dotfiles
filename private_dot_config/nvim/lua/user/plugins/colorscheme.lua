@@ -35,9 +35,6 @@ return {
 	{
 		"madlabman/oxocarbon.nvim",
 		lazy = true,
-		dependencies = {
-			"rktjmp/hotpot.nvim",
-		},
 	},
 	{
 		"bluz71/vim-moonfly-colors",

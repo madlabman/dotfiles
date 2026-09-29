@@ -1,8 +1,3 @@
-local ok, lspconfig = pcall(require, "lspconfig")
-if not ok then
-	return
-end
-
 -- local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
 -- if not has_cmp then
 -- 	return
@@ -12,33 +7,31 @@ end
 local default_capabilities = require("blink.cmp").get_lsp_capabilities()
 
 -- https://github.com/Ackee-Blockchain/wake
-require("lspconfig.configs").wake = {
-	default_config = {
-		cmd = { "nc", "localhost", "65432" }, -- NOTE: should be started manually
-		filetypes = { "solidity" },
-		root_dir = lspconfig.util.root_pattern("foundry.toml", "wake.toml"),
-		settings = {
-			wake = {
-				configuration = {
-					use_toml_if_present = true,
-					toml_path = "wake.toml",
+vim.lsp.config("wake", {
+	cmd = { "eth_wake_lsp" },
+	filetypes = { "solidity" },
+	root_markers = { "foundry.toml", "wake.toml" },
+	settings = {
+		wake = {
+			configuration = {
+				use_toml_if_present = true,
+				toml_path = "wake.toml",
+			},
+			lsp = {
+				compilation_delay = 15, -- NOTE: it doesn't work I think
+				find_references = {
+					include_declarations = true,
 				},
-				lsp = {
-					compilation_delay = 15, -- NOTE: it doesn't work I think
-					find_references = {
-						include_declarations = true,
-					},
-					code_lens = {
-						enable = false,
-					},
-					detectors = {
-						only = {},
-					},
+				code_lens = {
+					enable = false,
+				},
+				detectors = {
+					only = {},
 				},
 			},
 		},
 	},
-}
+})
 
 local servers = {
 	"gopls",
@@ -118,8 +111,6 @@ end
 for _, server in pairs(servers) do
 	local lsp_opts = {
 		on_attach = on_attach,
-		cmd = lspconfig[server].cmd or nil,
-		on_init = lspconfig[server].on_init or nil,
 	}
 
 	if "lua_ls" == server then
@@ -141,12 +132,12 @@ for _, server in pairs(servers) do
 		}
 	end
 
-	lspconfig[server].setup({
+	vim.lsp.config(server, {
 		capabilities = default_capabilities,
 		on_attach = lsp_opts.on_attach,
 		settings = lsp_opts.settings,
-		cmd = lsp_opts.cmd,
 	})
+	vim.lsp.enable(server)
 end
 
 require("typescript-tools").setup({
