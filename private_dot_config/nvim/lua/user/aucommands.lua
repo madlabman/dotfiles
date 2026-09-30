@@ -108,3 +108,44 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 		})
 	end,
 })
+
+vim.api.nvim_create_user_command("ToCheckSum", function()
+	local word = vim.fn.expand("<cword>")
+	if word == "" then
+		return
+	end
+	if #word ~= 42 or not word:match("^0x[%da-fA-F]+$") then
+		vim.notify("Not an Ethereum address under the cursor", vim.log.levels.ERROR)
+		return
+	end
+	if vim.fn.executable("cast") == 0 then
+		vim.notify("cast is not installed", vim.log.levels.ERROR)
+		return
+	end
+
+	local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+	local line = vim.api.nvim_get_current_line()
+	local start = 1
+	while true do
+		local first, last = line:find(word, start, true)
+		if not first then
+			return
+		end
+		if first <= col + 1 and col + 1 <= last then
+			local result = vim.system({ "cast", "to-check-sum-address", word }, { text = true }):wait()
+			if result.code ~= 0 then
+				vim.notify(vim.trim(result.stderr or "") ~= "" and vim.trim(result.stderr) or "cast failed", vim.log.levels.ERROR)
+				return
+			end
+
+			local out = vim.trim(result.stdout or "")
+			if #out ~= 42 or not out:match("^0x[%da-fA-F]+$") then
+				vim.notify("cast returned an invalid address", vim.log.levels.ERROR)
+				return
+			end
+			vim.api.nvim_buf_set_text(0, row - 1, first - 1, row - 1, last, { out })
+			return
+		end
+		start = last + 1
+	end
+end, { desc = "Checksum Ethereum address under cursor with cast" })
