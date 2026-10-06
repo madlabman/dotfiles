@@ -61,5 +61,20 @@ return {
 	},
 	{ "Glench/Vim-Jinja2-Syntax" },
 	{ "mfussenegger/nvim-treehopper" },
-	{ "folke/snacks.nvim" },
+	{
+		"folke/snacks.nvim",
+		opts = {
+			lazygit = {
+				config = {
+					os = {
+						editPreset = "nvim-remote",
+						-- Clear custom commands so the preset opens files in this Neovim.
+						edit = "",
+						editAtLine = "",
+						editInTerminal = false,
+					},
+				},
+			},
+		},
+	},
 }
