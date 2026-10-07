@@ -21,6 +21,7 @@ return {
 
 			vim.treesitter.language.register("gotmpl", { "gohtmltmpl", "gotexttmpl" })
 			vim.treesitter.language.register("json", "jsonc")
+			vim.treesitter.language.register("bash", "env")
 			vim.api.nvim_create_user_command("TSInstallConfigured", function()
 				treesitter.install({
 					"bash",
